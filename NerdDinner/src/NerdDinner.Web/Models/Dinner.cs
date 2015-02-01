@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace NerdDinner.Web.Models
 {
@@ -10,10 +11,9 @@ namespace NerdDinner.Web.Models
     public class Dinner
     {
         /// <summary>
-        /// Gets or sets DinnerID
+        /// Gets or sets DinnerId
         /// </summary>
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long DinnerId { get; set; }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace NerdDinner.Web.Models
         /// Gets or sets HostedByUserId
         /// </summary>
         [Required]
-        public long HostedByUserId { get; set; }
+        public long UserId { get; set; }
 
         /// <summary>
         /// Gets or sets ContactPhone
@@ -78,8 +78,18 @@ namespace NerdDinner.Web.Models
         public string HostedByName { get; set; }
 
         /// <summary>
-        /// Gets or sets User
+        /// Gets or sets Rsvps
         /// </summary>
-        public virtual User User { get; set; }
+        public ICollection<Rsvp> Rsvps { get; set; }
+
+        /// <summary>
+        /// Checks if user is registered for the dinner
+        /// </summary>
+        /// <param name="userId">user Id</param>
+        /// <returns>true if registered, false otherwise</returns>
+        public bool IsUserRegistered(int userId)
+        {
+            return Rsvps.Any(r => r.UserId == userId);
+        }
     }
 }

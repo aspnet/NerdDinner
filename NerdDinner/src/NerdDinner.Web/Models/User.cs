@@ -1,48 +1,25 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace NerdDinner.Web.Models
 {
     /// <summary>
     /// Entity Class for User
     /// </summary>
-    public class User
+    public class User : UserBase
     {
         /// <summary>
-        /// Gets or sets UserId
-        /// </summary>
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long UserId { get; set; }
-
-        /// <summary>
-        /// Gets or sets ProviderId
+        /// Gets or sets Password
         /// </summary>
         [Required]
-        public string ProviderId { get; set; }
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
 
         /// <summary>
-        /// Gets or sets ProviderName
+        /// Gets or sets confirmPassword
         /// </summary>
-        [Required]
-        public string ProviderName { get; set; }
-
-        /// <summary>
-        /// Gets or sets Email
-        /// </summary>
-        [Required]
-        public string Email { get; set; }
-
-        /// <summary>
-        /// Gets or sets UserName
-        /// </summary>
-        [Required]
-        public string UserName { get; set; }
-
-        /// <summary>
-        /// Gets or sets Dinners
-        /// </summary>
-        public virtual ICollection<Dinner> Dinners { get; set; }
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Data.Entity.ChangeTracking;
 using NerdDinner.Web.Models;
 
 namespace NerdDinner.Test.TestSetup
@@ -28,23 +29,24 @@ namespace NerdDinner.Test.TestSetup
         /// <summary>
         /// Helper method to get dinner
         /// </summary>
-        /// <param name="dinnerId"></param>
+        /// <param name="DinnerId"></param>
         /// <param name="eventDate"></param>
-        /// <param name="userId"></param>
+        /// <param name="UserId"></param>
         /// <returns>dinner object</returns>
-        public static Dinner GetDinner(long dinnerId, DateTime eventDate, long userId)
+        public static Dinner GetDinner(int DinnerId, DateTime eventDate, int UserId)
         {
             var dinner = new Dinner
             {
-                DinnerId = dinnerId,
-                Address = "Address " + dinnerId.ToString(),
-                Country = "Country " + dinnerId.ToString(),
-                Description = "Test Dinner " + dinnerId.ToString(),
+                DinnerId = DinnerId,
+                UserId = UserId,
+
+                Address = "Address " + DinnerId.ToString(),
+                Country = "Country " + DinnerId.ToString(),
+                Description = "Test Dinner " + DinnerId.ToString(),
                 ContactPhone = "123-456-7890",
                 EventDate = eventDate,
                 Latitude = 10,
                 Longitude = 10,
-                HostedByUserId = userId,
                 Title = "Test Dinner Title"
             };
 

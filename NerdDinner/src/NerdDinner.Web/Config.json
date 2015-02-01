@@ -1,7 +1,7 @@
 ﻿{
     "Data": {
         "DefaultConnection": {
-            "ConnectionString": "Filename=.\\Data\\NerdDinner.sqlite"
+            "ConnectionString": "Data Source=.\\Data\\NerdDinner.sqlite;"
         }
     }
 }

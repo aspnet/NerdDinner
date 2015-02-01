@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
-using NerdDinner.Web.Common;
 using NerdDinner.Web.Models;
 using NerdDinner.Web.Persistence;
 
@@ -25,7 +23,11 @@ namespace NerdDinner.Web.Controllers
         /// <param name="repository">nerd dinner repository</param>
         public DinnersController(INerdDinnerRepository repository)
         {
-            repository.EnsureArgumentNotNull("repository");
+            if (repository == null)
+            {
+                throw new ArgumentNullException("repository");
+            }
+
             _repository = repository;
         }
 
@@ -34,8 +36,8 @@ namespace NerdDinner.Web.Controllers
         /// </summary>
         /// <param name="id">dinner id is sent</param>
         /// <returns>return dinner if dinner exists else a 404</returns>
-        [HttpGet("{id:long}", Name = "GetDinnerById")]
-        public async Task<IActionResult> GetDinnerAsync(long id)
+        [HttpGet("{id:int}", Name = "GetDinnerById")]
+        public async Task<IActionResult> GetDinnerAsync(int id)
         {
             var dinner = await _repository.GetDinnerAsync(id);
             if (dinner == null)
@@ -60,64 +62,12 @@ namespace NerdDinner.Web.Controllers
         public async Task<IEnumerable<Dinner>> GetDinnersAsync(
             DateTime? startDate,
             DateTime? endDate,
-            long userId = 0,
+            int userId = 0,
             string searchQuery = null,
             string sort = null,
             bool descending = false)
         {
-            var query = _repository.Dinners.AsQueryable();
-
-            if (userId != 0)
-            {
-                query = query.Where(d => d.HostedByUserId == userId);
-            }
-
-            if (startDate != null)
-            {
-                query = query.Where(d => d.EventDate >= startDate);
-            }
-
-            if (endDate != null)
-            {
-                query = query.Where(d => d.EventDate <= endDate);
-            }
-
-            if (!string.IsNullOrWhiteSpace(searchQuery))
-            {
-                query = query.Where(d => d.Title.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) || d.Description.Contains(searchQuery, StringComparison.OrdinalIgnoreCase));
-            }
-
-            if (!string.IsNullOrWhiteSpace(sort))
-            {
-                query = query.OrderByPropertyName(sort, descending);
-            }
-
-            return await query.ToListAsync();
-        }
-
-        /// <summary>
-        /// Updates the changes made in the dinner
-        /// </summary>
-        /// <param name="id">dinner id is sent</param>
-        /// <param name="dinner">Updated Dinner Object</param>
-        /// <returns>updated dinner if success else 400</returns>
-        [HttpPut]
-        public async Task<IActionResult> UpdateDinnerAsync(long id, Dinner dinner)
-        {
-            if (dinner.DinnerId != id)
-            {
-                // return bad request
-            }
-
-            dinner = await _repository.UpdateDinnerAsync(id, dinner);
-            if (dinner != null)
-            {
-                return new JsonResult(dinner);
-            }
-            else
-            {
-                return HttpNotFound();
-            }
+            return await _repository.GetDinnersAsync(startDate, endDate, userId, searchQuery, sort, descending);
         }
 
         /// <summary>
@@ -126,13 +76,33 @@ namespace NerdDinner.Web.Controllers
         /// <param name="dinner">Initial dinner object</param>
         /// <returns>added dinner if success else 400</returns>
         [HttpPost]
-        public async Task<IActionResult> AddDinnerAsync(Dinner dinner)
+        public async Task<IActionResult> CreateDinnerAsync(Dinner dinner)
         {
-            dinner = await _repository.AddDinnerAsync(dinner);
-            string url = Url.RouteUrl("GetDinnerById", new { id = dinner.DinnerId }, Request.Scheme, Request.Host.ToUriComponent());
+            //TODO: The user id in the dinner should be populated from the identity
+            dinner = await _repository.CreateDinnerAsync(dinner);
+            var url = Url.RouteUrl("GetDinnerById", new { id = dinner.DinnerId }, Request.Scheme, Request.Host.ToUriComponent());
 
             Context.Response.StatusCode = (int)HttpStatusCode.Created;
             Context.Response.Headers["Location"] = url;
+            return new JsonResult(dinner);
+        }
+
+        /// <summary>
+        /// Updates the changes made in the dinner
+        /// </summary>
+        /// <param name="id">dinner id is sent</param>
+        /// <param name="dinner">Updated Dinner Object</param>
+        /// <returns>updated dinner if success else 400</returns>
+        [HttpPut("{id:int}", Name = "UpdateDinnerById")]
+        public async Task<IActionResult> UpdateDinnerAsync(int id, Dinner dinner)
+        {
+            //TODO: Validate if updating dinner was created by user in identity
+            if (dinner.DinnerId != id)
+            {
+                return new HttpStatusCodeResult((int)HttpStatusCode.BadRequest);
+            }
+
+            dinner = await _repository.UpdateDinnerAsync(dinner);
             return new JsonResult(dinner);
         }
 
@@ -141,9 +111,10 @@ namespace NerdDinner.Web.Controllers
         /// </summary>
         /// <param name="id">dinner id</param>
         /// <returns>Return 204 if success else 404</returns>
-        [HttpDelete("{id:long}", Name = "DeleteDinnerById")]
-        public async Task<IActionResult> DeleteDinnerAsync(long id)
+        [HttpDelete("{id:int}", Name = "DeleteDinnerById")]
+        public async Task<IActionResult> DeleteDinnerAsync(int id)
         {
+            //TODO: Validate if deleting dinner was created by user in identity
             await _repository.DeleteDinnerAsync(id);
             return new HttpStatusCodeResult((int)HttpStatusCode.NoContent);
         }

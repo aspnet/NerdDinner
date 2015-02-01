@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNet.Builder;
+﻿using System;
+using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Routing;
 using Microsoft.Framework.ConfigurationModel;
@@ -37,14 +39,27 @@ namespace NerdDinner.Web
         {
             app.UseServices(services =>
             {
-                // Add EF services to the services container and SQLite
+                // Use in memory store
                 services
                     .AddEntityFramework()
-                    .AddSQLite();
+                    .AddInMemoryStore()
+                    .AddDbContext<NerdDinnerDbContext>();
+
+                // EntityFramework.SQLite has not been upgraded to beta 2
+                // Uncomment this after it is done
+                // services
+                //    .AddEntityFramework()
+                //    .AddSQLite()
+                //    .AddDbContext<NerdDinnerDbContext>(options =>
+                //    {
+                //        options.UseSQLite(Configuration.Get("Data:DefaultConnection:ConnectionString"));
+                //    });
 
                 services.AddScoped<INerdDinnerRepository, NerdDinnerRepository>();
-                services.AddScoped<NerdDinnerDbContext>();
-                services.AddScoped<IConfiguration>(s => Configuration);
+                services
+                    .AddIdentity<IdentityUser, IdentityRole>()
+                    .AddEntityFrameworkStores<NerdDinnerDbContext>()
+                    .AddDefaultTokenProviders();
 
                 // Add MVC services to the services container
                 services.AddMvc().Configure<MvcOptions>(options =>
@@ -67,7 +82,6 @@ namespace NerdDinner.Web
 
                     // Add validation and exception filters
                     options.Filters.Add(new ValidateModelFilter());
-                    options.Filters.Add(new GlobalExceptionFilter());
                 });
             });
 

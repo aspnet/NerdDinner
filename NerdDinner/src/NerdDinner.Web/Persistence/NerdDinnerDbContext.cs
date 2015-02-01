@@ -1,6 +1,7 @@
-﻿using Microsoft.Data.Entity;
-using Microsoft.Framework.ConfigurationModel;
-using NerdDinner.Web.Common;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Data.Entity;
+using Microsoft.Data.Entity.Metadata;
 using NerdDinner.Web.Models;
 
 namespace NerdDinner.Web.Persistence
@@ -8,40 +9,38 @@ namespace NerdDinner.Web.Persistence
     /// <summary>
     /// Nerd Dinner Database Context
     /// </summary>
-    public class NerdDinnerDbContext : DbContext
+    public class NerdDinnerDbContext : IdentityDbContext<IdentityUser>
     {
-        /// <summary>
-        /// Configuration
-        /// </summary>
-        private readonly IConfiguration _configuration;
-
         /// <summary>
         /// Gets or sets Dinners
         /// </summary>
-        public virtual DbSet<Dinner> Dinners { get; }
+        public virtual DbSet<Dinner> Dinners { get; set; }
 
         /// <summary>
         /// Gets or sets Users
         /// </summary>
-        public virtual DbSet<User> Users { get; }
+        public virtual DbSet<Rsvp> Rsvp { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the type <see cref="NerdDinnerDbContext"/>
+        /// Override Model Creating
         /// </summary>
-        /// <param name="configuration"></param>
-        public NerdDinnerDbContext(IConfiguration configuration)
+        /// <param name="modelBuilder">Model Builder</param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            configuration.EnsureArgumentNotNull("configuration");
-            _configuration = configuration;
-        }
+            modelBuilder.Entity<Dinner>(d =>
+            {
+                d.Key(x => x.DinnerId);
+                d.Property(x => x.DinnerId).GenerateValueOnAdd();
+                d.OneToMany(x => x.Rsvps).ForeignKey(x => x.DinnerId);
+            });
 
-        /// <summary>
-        /// On Configuring function is used set connection string
-        /// </summary>
-        /// <param name="options">Db Context options</param>
-        protected override void OnConfiguring(DbContextOptions options)
-        {
-            options.UseSQLite(_configuration.Get("Data:DefaultConnection:ConnectionString"));
+            modelBuilder.Entity<Rsvp>(r =>
+            {
+                r.Key(x => x.RsvpId);
+                r.Property(x => x.RsvpId).GenerateValueOnAdd();
+            });
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

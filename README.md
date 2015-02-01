@@ -1,1 +1,1 @@
-Nerd Dinner sample application written using ASP.Net VNext
+Nerd Dinner sample application written using ASP.NET 5

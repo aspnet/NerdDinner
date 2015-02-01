@@ -1,28 +1,28 @@
 ﻿{
-    "webroot": "wwwroot",
-    "version": "1.0.0-*",
-    "exclude": [
-        "wwwroot"
-    ],
-    "packExclude": [
-        "**.kproj",
-        "**.user",
-        "**.vspscc"
-    ],
-    "dependencies": {
-        "EntityFramework": "7.0.0-beta1",
-        "EntityFramework.InMemory": "7.0.0-beta1",
-        "EntityFramework.SQLite": "7.0.0-beta1",
-        "Microsoft.AspNet.Diagnostics": "1.0.0-beta1",
-        "Microsoft.AspNet.Hosting": "1.0.0-beta1",
-        "Microsoft.AspNet.Identity": "3.0.0-beta1",
-        "Microsoft.AspNet.Identity.EntityFramework": "3.0.0-beta1",
-        "Microsoft.AspNet.Mvc": "6.0.0-beta1",
-        "Microsoft.AspNet.Routing": "1.0.0-beta1",
-        "Microsoft.AspNet.Server.IIS": "1.0.0-beta1",
-        "Microsoft.AspNet.Server.WebListener": "1.0.0-beta1",
-        "Microsoft.Framework.ConfigurationModel.Json": "1.0.0-beta1"
-    },
+	"webroot": "wwwroot",
+	"version": "1.0.0-*",
+	"exclude": [
+		"wwwroot"
+	],
+	"packExclude": [
+		"**.kproj",
+		"**.user",
+		"**.vspscc"
+	],
+	"dependencies": {
+		"EntityFramework": "7.0.0-*",
+		"EntityFramework.InMemory": "7.0.0-*",
+		"EntityFramework.SQLite": "7.0.0-*",
+		"Microsoft.AspNet.Diagnostics": "1.0.0-*",
+		"Microsoft.AspNet.Hosting": "1.0.0-*",
+		"Microsoft.AspNet.Identity": "3.0.0-*",
+		"Microsoft.AspNet.Identity.EntityFramework": "3.0.0-*",
+		"Microsoft.AspNet.Mvc": "6.0.0-*",
+		"Microsoft.AspNet.Routing": "1.0.0-*",
+		"Microsoft.AspNet.Server.IIS": "1.0.0-*",
+		"Microsoft.AspNet.Server.WebListener": "1.0.0-*",
+		"Microsoft.Framework.ConfigurationModel.Json": "1.0.0-*"
+	},
     "frameworks": {
         "aspnet50": { },
         "aspnetcore50": { }
