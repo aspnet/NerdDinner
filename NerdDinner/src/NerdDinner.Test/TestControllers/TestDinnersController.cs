@@ -28,21 +28,21 @@ namespace NerdDinner.Test.TestControllers
         /// This function is used to unit test get dinner method
         /// </summary>
         /// <param name="expectedStatusCode">expected status code</param>
-        /// <param name="DinnerId">dinner id</param>
+        /// <param name="dinnerId">dinner id</param>
         /// <returns></returns>
         [Theory]
         [InlineData(200, 1)] // Dinner Id 1
         [InlineData(404, 10)] // Dinner Id 10
-        public async Task TestGetDinnerAsync(int expectedStatusCode, int DinnerId)
+        public async Task TestGetDinnerAsync(int expectedStatusCode, int dinnerId)
         {
             var dinnersController = GetTestDinnersController();
-            var result = await dinnersController.GetDinnerAsync(DinnerId);
+            var result = await dinnersController.GetDinnerAsync(dinnerId);
 
             switch (expectedStatusCode)
             {
                 case 200:
                     var dinner = (Dinner)((JsonResult)result).Value;
-                    Assert.Equal(dinner.DinnerId, DinnerId);
+                    Assert.Equal(dinner.DinnerId, dinnerId);
                     break;
                 case 404:
                     Assert.Equal(((HttpStatusCodeResult)result).StatusCode, expectedStatusCode);
@@ -62,16 +62,16 @@ namespace NerdDinner.Test.TestControllers
         /// <param name="count">expected count</param>
         /// <returns></returns>
         [Theory]
-        [InlineData(null, null, 0, null, "DinnerId", false, 2)] // All dinners
-        [InlineData(null, null, 0, null, "DinnerId", true, 2)] // All dinners desc sort
-        [InlineData(-1d, 1d, 0, null, "DinnerId", false, 1)] // Dinner date today
-        [InlineData(1d, 2d, 0, null, "DinnerId", false, 1)] // Dinner date future
-        [InlineData(-3d, -2d, 0, null, "DinnerId", false, 0)] // out of bound dates
-        [InlineData(null, null, 1, null, "DinnerId", false, 1)] // User Id 1
-        [InlineData(null, null, 3, null, "DinnerId", false, 0)] // Non existing user id
-        [InlineData(null, null, 0, "1", "DinnerId", false, 1)] // search query one
-        [InlineData(null, null, 0, "3", "DinnerId", false, 0)] // non matching search query
-        public async Task TestGetAllDinners(double? startInt, double? endInt, int UserId, string q, string sort, bool desc, int count)
+        [InlineData(null, null, 0, null, "dinnerId", false, 2)] // All dinners
+        [InlineData(null, null, 0, null, "dinnerId", true, 2)] // All dinners desc sort
+        [InlineData(-1d, 1d, 0, null, "dinnerId", false, 1)] // Dinner date today
+        [InlineData(1d, 2d, 0, null, "dinnerId", false, 1)] // Dinner date future
+        [InlineData(-3d, -2d, 0, null, "dinnerId", false, 0)] // out of bound dates
+        [InlineData(null, null, 1, null, "dinnerId", false, 1)] // User Id 1
+        [InlineData(null, null, 3, null, "dinnerId", false, 0)] // Non existing user id
+        [InlineData(null, null, 0, "1", "dinnerId", false, 1)] // search query one
+        [InlineData(null, null, 0, "3", "dinnerId", false, 0)] // non matching search query
+        public async Task TestGetAllDinners(double? startInt, double? endInt, int userId, string q, string sort, bool desc, int count)
         {
             DateTime? start = null;
             DateTime? end = null;
@@ -85,7 +85,7 @@ namespace NerdDinner.Test.TestControllers
                 end = DateTime.Now.AddDays(en);
             }
 
-            var result = await dinnersController.GetDinnersAsync(start, end, UserId, q, sort, desc);
+            var result = await dinnersController.GetDinnersAsync(start, end, userId, q, sort, desc);
             Assert.Equal(result.Count(), count);
 
             if (desc && result.Any())
@@ -97,10 +97,10 @@ namespace NerdDinner.Test.TestControllers
         /// <summary>
         /// This function is used to unit test Post dinner method
         /// </summary>
-        /// <param name="DinnerId">Dinner Id</param>
+        /// <param name="dinnerId">Dinner Id</param>
         [Theory]
         [InlineData(1)] // Dinner Id 1
-        public async Task TestAddDinnerAsync(int DinnerId)
+        public async Task TestAddDinnerAsync(int dinnerId)
         {
             // httpContext response request url need to be mocked for post method
             var httpContext = new Mock<HttpContext>();
@@ -114,34 +114,34 @@ namespace NerdDinner.Test.TestControllers
             httpContext.SetupGet(c => c.Response).Returns(response.Object);
             httpContext.SetupGet(c => c.Request).Returns(request.Object);
 
-            var dinnersController = GetTestDinnersController(DinnerId);
+            var dinnersController = GetTestDinnersController(dinnerId);
             dinnersController.ActionContext = new ActionContext(httpContext.Object, new RouteData(), null);
             dinnersController.Url = url.Object;
 
-            var result = await dinnersController.CreateDinnerAsync(TestHelper.GetDinner(DinnerId, DateTime.Now, 1));
+            var result = await dinnersController.CreateDinnerAsync(TestHelper.GetDinner(dinnerId, DateTime.Now, 1));
             var dinner = (Dinner)((JsonResult)result).Value;
-            Assert.Equal(dinner.DinnerId, DinnerId);
+            Assert.Equal(dinner.DinnerId, dinnerId);
         }
 
         /// <summary>
         /// This function is used to unit test Put dinner method
         /// </summary>
         /// <param name="expectedStatusCode">expected status code</param>
-        /// <param name="DinnerId">dinner id</param>
+        /// <param name="dinnerId">dinner id</param>
         /// <returns></returns>
         [Theory]
         [InlineData(200, 1)] // Dinner Id 1
         [InlineData(404, 10)] // Dinner Id 2
-        public async Task TestUpdateDinnerAsync(int expectedStatusCode, int DinnerId)
+        public async Task TestUpdateDinnerAsync(int expectedStatusCode, int dinnerId)
         {
-            var dinnersController = GetTestDinnersController(DinnerId);
-            var result = await dinnersController.UpdateDinnerAsync(DinnerId, TestHelper.GetDinner(DinnerId, DateTime.Now, 1));
+            var dinnersController = GetTestDinnersController(dinnerId);
+            var result = await dinnersController.UpdateDinnerAsync(dinnerId, TestHelper.GetDinner(dinnerId, DateTime.Now, 1));
 
             switch (expectedStatusCode)
             {
                 case 200:
                     var dinner = (Dinner)((JsonResult)result).Value;
-                    Assert.Equal(dinner.DinnerId, DinnerId);
+                    Assert.Equal(dinner.DinnerId, dinnerId);
                     break;
                 case 404:
                     Assert.Equal(((HttpStatusCodeResult)result).StatusCode, expectedStatusCode);
@@ -153,13 +153,13 @@ namespace NerdDinner.Test.TestControllers
         /// This function is used to unit test delete dinner method
         /// </summary>
         /// <param name="expectedStatusCode">expected Status code</param>
-        /// <param name="DinnerId">dinner Id</param>
+        /// <param name="dinnerId">dinner Id</param>
         [Theory]
         [InlineData(204, 1)] // Success with not content
-        public async Task TestDeleteDinnerAsync(int expectedStatusCode, int DinnerId)
+        public async Task TestDeleteDinnerAsync(int expectedStatusCode, int dinnerId)
         {
             var dinnersController = GetTestDinnersController();
-            var result = await dinnersController.DeleteDinnerAsync(DinnerId) as HttpStatusCodeResult;
+            var result = await dinnersController.DeleteDinnerAsync(dinnerId) as HttpStatusCodeResult;
 
             Assert.Equal(result.StatusCode, expectedStatusCode);
         }
@@ -181,14 +181,14 @@ namespace NerdDinner.Test.TestControllers
         /// <summary>
         /// Get test dinner controller for post and put
         /// </summary>
-        /// <param name="DinnerId">dinner id</param>
+        /// <param name="dinnerId">dinner id</param>
         /// <returns>dinner controller</returns>
-        private DinnersController GetTestDinnersController(int DinnerId)
+        private DinnersController GetTestDinnersController(int dinnerId)
         {
             var mockContext = SetupMockContext();
             // For Post and Put Methods
-            //mockContext.Setup(c => c.Update(It.IsAny<Dinner>())).Returns(TestHelper.GetDinner(DinnerId, DateTime.Now, 1));
-            //mockContext.Setup(c => c.Add(It.IsAny<Dinner>())).Returns(TestHelper.GetDinner(DinnerId, DateTime.Now, 1));
+            //mockContext.Setup(c => c.Update(It.IsAny<Dinner>())).Returns(TestHelper.GetDinner(dinnerId, DateTime.Now, 1));
+            //mockContext.Setup(c => c.Add(It.IsAny<Dinner>())).Returns(TestHelper.GetDinner(dinnerId, DateTime.Now, 1));
 
             var repository = SetupRepository(mockContext.Object);
             var dinnersController = new DinnersController(repository);

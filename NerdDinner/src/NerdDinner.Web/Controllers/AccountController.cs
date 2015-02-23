@@ -9,34 +9,16 @@ using NerdDinner.Web.Persistence;
 
 namespace NerdDinner.Web.Controllers
 {
-    /// <summary>
-    /// Account Controller class
-    /// Performs CRUD operations
-    /// </summary>
     [Route("api/[controller]")]
     public class AccountController : Controller
     {
         private readonly INerdDinnerRepository _repository;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AccountController"/> class.
-        /// </summary>
-        /// <param name="repository">nerd dinner repository</param>
         public AccountController(INerdDinnerRepository repository)
         {
-            if (repository == null)
-            {
-                throw new ArgumentNullException("repository");
-            }
-
             _repository = repository;
         }
 
-        /// <summary>
-        /// Register user
-        /// </summary>
-        /// <param name="user">user</param>
-        /// <returns></returns>
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> RegisterUserAsync(User user)
@@ -58,10 +40,6 @@ namespace NerdDinner.Web.Controllers
             }
         }
 
-        /// <summary>
-        /// Unsubscribe user
-        /// </summary>
-        /// <returns></returns>
         [HttpPost]
         [Route("unsubscribe")]
         public async Task<IActionResult> UnsubscribeUserAsync()

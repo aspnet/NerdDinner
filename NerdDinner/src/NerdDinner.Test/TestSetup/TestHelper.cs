@@ -29,20 +29,20 @@ namespace NerdDinner.Test.TestSetup
         /// <summary>
         /// Helper method to get dinner
         /// </summary>
-        /// <param name="DinnerId"></param>
+        /// <param name="dinnerId"></param>
         /// <param name="eventDate"></param>
-        /// <param name="UserId"></param>
+        /// <param name="userId"></param>
         /// <returns>dinner object</returns>
-        public static Dinner GetDinner(int DinnerId, DateTime eventDate, int UserId)
+        public static Dinner GetDinner(int dinnerId, DateTime eventDate, int userId)
         {
             var dinner = new Dinner
             {
-                DinnerId = DinnerId,
-                UserId = UserId,
+                DinnerId = dinnerId,
+                UserId = userId,
 
-                Address = "Address " + DinnerId.ToString(),
-                Country = "Country " + DinnerId.ToString(),
-                Description = "Test Dinner " + DinnerId.ToString(),
+                Address = "Address " + dinnerId.ToString(),
+                Country = "Country " + dinnerId.ToString(),
+                Description = "Test Dinner " + dinnerId.ToString(),
                 ContactPhone = "123-456-7890",
                 EventDate = eventDate,
                 Latitude = 10,
