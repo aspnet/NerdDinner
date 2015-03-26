@@ -19,7 +19,7 @@ namespace NerdDinner.Web.Persistence
             {
                 d.Key(x => x.DinnerId);
                 d.Property(x => x.DinnerId).GenerateValueOnAdd();
-                d.OneToMany(x => x.Rsvps).ForeignKey(x => x.DinnerId);
+                d.HasMany(x => x.Rsvps).WithOne(x => x.Dinner).ForeignKey(x => x.DinnerId);
             });
 
             modelBuilder.Entity<Rsvp>(r =>

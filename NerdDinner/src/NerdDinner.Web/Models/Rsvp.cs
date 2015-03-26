@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace NerdDinner.Web.Models
 {
@@ -12,5 +13,8 @@ namespace NerdDinner.Web.Models
 
         [Required]
         public long UserId { get; set; }
+
+        [JsonIgnore]
+        public Dinner Dinner { get; set; }
     }
 }

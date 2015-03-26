@@ -1,11 +1,10 @@
-﻿using System;
-using Microsoft.AspNet.Builder;
+﻿using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Routing;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using NerdDinner.Web.Common;
+using NerdDinner.Web.Models;
 using NerdDinner.Web.Persistence;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -64,12 +63,16 @@ namespace NerdDinner.Web
                 });
             });
 
+            app.UseStaticFiles();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     null,
                     "api/{controller}/{id?}");
             });
+
+            //Populates the sample data
+            SampleData.InitializeNerdDinner(app.ApplicationServices).Wait();
         }
     }
 }

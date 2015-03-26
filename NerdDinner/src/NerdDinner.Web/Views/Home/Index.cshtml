@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html ng-app="nerdDinner">
+<head>
+    <base href="/">
+    <meta charset="utf-8" />
+    <title>Nerd Dinner</title>
+
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap-theme.min.css" />
+    
+    <script src="~/lib/respond/respond.src.js"></script>
+    <script src="~/lib/modernizr/modernizr.js"></script>
+    
+    <script src="~/lib/angular/angular.js"></script>
+    <script src="~/lib/angular-resource/angular-resource.js"></script>
+    <script src="~/lib/angular-route/angular-route.js"></script>
+    <script src="~/lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+
+    <script src="/app.js"></script>
+
+    <script>
+        angular.module("nerdDinner");
+    </script>
+
+</head>
+<body>
+    <div class="container-fluid">
+        <ng-view></ng-view>
+    </div>
+</body>
+</html>

@@ -18,11 +18,10 @@ namespace NerdDinner.Web.Models
         public DateTime EventDate { get; set; }
 
         [Required]
-        [MaxLength(1028)]
+        [MaxLength(1024)]
         public string Description { get; set; }
 
         [Required]
-        [MaxLength(64)]
         public long UserId { get; set; }
 
         [Required]

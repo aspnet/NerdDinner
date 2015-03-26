@@ -1,0 +1,14 @@
+﻿﻿<div>
+    <div>
+        <p><b>{{dinner.title}}</b></p>
+        <p><span>When: </span><span>{{dinner.eventDate}}</span></p>
+        <p><span>Where: </span><span>{{dinner.address}}</span></p>
+        <p><span>Description: </span><span>{{dinner.description}}</span></p>
+        <p><span>Organizer: </span><span>{{dinner.hostedByName}}</span></p>
+        <p><span>Who's coming:</span></p>
+        <p ng-repeat="rsvp in dinner.rsvps">
+            <span>{{rsvp.userId}}</span>
+        </p>
+
+    </div>
+</div>

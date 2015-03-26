@@ -9,6 +9,7 @@ using NerdDinner.Web.Persistence;
 
 namespace NerdDinner.Web.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class AccountController : Controller
     {
@@ -19,6 +20,7 @@ namespace NerdDinner.Web.Controllers
             _repository = repository;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> RegisterUserAsync(User user)
