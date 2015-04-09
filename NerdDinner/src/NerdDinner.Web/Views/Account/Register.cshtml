@@ -1,0 +1,27 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 table-bordered boxed-div">
+            <div class="boxed-div">
+                <form ng-submit="register()">
+
+                    <div class="form-group">
+                        <label for="userName">User Name</label>
+                        <input type="text" class="form-control" ng-model="registerForm.userName" id="userName" placeholder="Enter User Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" ng-model="registerForm.password" placeholder="Password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" ng-model="registerForm.confirmPassword" placeholder="Confirm Password">
+                    </div>
+
+                    <button type="submit" class="btn btn-default">Register</button> or <a href="/#/login">Login</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -6,7 +6,7 @@ using NerdDinner.Web.Models;
 
 namespace NerdDinner.Web.Persistence
 {
-    public class NerdDinnerDbContext : IdentityDbContext<IdentityUser>
+    public class NerdDinnerDbContext : IdentityDbContext<ApplicationUser>
     {
         public virtual DbSet<Dinner> Dinners { get; set; }
 

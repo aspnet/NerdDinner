@@ -13,9 +13,13 @@
                 templateUrl: '/views/list.html',
                 controller: 'DinnersListController'
             })
-            .when('/dinners/:id', {
+            .when('/dinners/details/:id', {
                 templateUrl: '/views/detail.html',
                 controller: 'DinnersDetailController'
+            })
+            .when('/mydinners', {
+                templateUrl: '/views/my.html',
+                controller: 'DinnersListController'
             })
             .when('/dinners/add', {
                 templateUrl: '/views/add.html',
@@ -28,6 +32,14 @@
             .when('/dinners/delete/:id', {
                 templateUrl: '/views/delete.html',
                 controller: 'DinnersDeleteController'
+            })
+            .when('/login', {
+                templateUrl: '/Account/Login',
+                controller: 'LoginController'
+            })
+            .when('/register', {
+                templateUrl: '/Account/Register',
+                controller: 'RegisterController'
             })
             .otherwise({ redirectTo: '/' });
 

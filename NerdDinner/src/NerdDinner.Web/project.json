@@ -1,4 +1,4 @@
-﻿{
+{
     "webroot": "wwwroot",
     "version": "1.0.0-*",
     "exclude": [
@@ -29,6 +29,11 @@
         "Microsoft.AspNet.Diagnostics": "1.0.0-beta3",
         "Microsoft.AspNet.Identity": "3.0.0-beta3",
         "Microsoft.AspNet.Identity.EntityFramework": "3.0.0-beta3",
+        "Microsoft.AspNet.Security.Cookies": "1.0.0-beta3",
+        "Microsoft.AspNet.Security.Facebook": "1.0.0-beta3",
+        "Microsoft.AspNet.Security.Google": "1.0.0-beta3",
+        "Microsoft.AspNet.Security.MicrosoftAccount": "1.0.0-beta3",
+        "Microsoft.AspNet.Security.Twitter": "1.0.0-beta3",
         "Microsoft.AspNet.Routing": "1.0.0-beta3",
         "EntityFramework": "7.0.0-beta3",
         "EntityFramework.InMemory": "7.0.0-beta3",

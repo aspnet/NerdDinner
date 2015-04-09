@@ -9,6 +9,7 @@ using NerdDinner.Web.Persistence;
 namespace NerdDinner.Web.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class DinnersController : Controller
     {
         private readonly INerdDinnerRepository _repository;
@@ -19,6 +20,7 @@ namespace NerdDinner.Web.Controllers
         }
 
         [HttpGet("{id:int}", Name = "GetDinnerById")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetDinnerAsync(int id)
         {
             var dinner = await _repository.GetDinnerAsync(id);
@@ -31,20 +33,35 @@ namespace NerdDinner.Web.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IEnumerable<Dinner>> GetDinnersAsync(
             DateTime? startDate,
             DateTime? endDate,
-            int userId = 0,
+            bool myDinners = false,
             string searchQuery = null,
             string sort = null,
             bool descending = false)
         {
-            return await _repository.GetDinnersAsync(startDate, endDate, userId, searchQuery, sort, descending);
+            string userName = string.Empty;
+
+            if (myDinners && !string.IsNullOrEmpty(Context.User.Identity.Name))
+            {
+                var user = await _repository.FindUserAsync(Context.User.Identity.Name);
+                if (user != null)
+                {
+                    userName = user.UserName;
+                }
+            }
+
+            return await _repository.GetDinnersAsync(startDate, endDate, userName, searchQuery, sort, descending);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateDinnerAsync(Dinner dinner)
+        public async Task<IActionResult> CreateDinnerAsync([FromBody] Dinner dinner)
         {
+            var user = await _repository.FindUserAsync(Context.User.Identity.Name);
+            dinner.UserName = user.UserName;
+
             // TODO: The user id in the dinner should be populated from the identity
             dinner = await _repository.CreateDinnerAsync(dinner);
             var url = Url.RouteUrl("GetDinnerById", new { id = dinner.DinnerId }, Request.Scheme, Request.Host.ToUriComponent());

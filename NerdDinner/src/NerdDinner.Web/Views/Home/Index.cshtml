@@ -8,10 +8,12 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap-theme.min.css" />
-    
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+
     <script src="~/lib/respond/respond.src.js"></script>
     <script src="~/lib/modernizr/modernizr.js"></script>
-    
+
     <script src="~/lib/angular/angular.js"></script>
     <script src="~/lib/angular-resource/angular-resource.js"></script>
     <script src="~/lib/angular-route/angular-route.js"></script>
@@ -22,14 +24,38 @@
 
     <script src="/app.js"></script>
 
+
     <script>
         angular.module("nerdDinner");
     </script>
 
 </head>
 <body>
-    <div class="container-fluid">
-        <ng-view></ng-view>
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Nerd Dinner", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div id="navbar" class="navbar-collapse collapse" ng-controller="NavController">
+                <ul class="nav navbar-nav">
+                    <li ng-class="{ active: isActive('/') || isActive('dinners/details/{id}') }"><a href="/">List Dinner</a></li>
+                    <li ng-show="isLoggedIn" ng-class="{ active: isActive('/dinners/add') }"><a href="/#/dinners/add">Host Dinner</a></li>
+                    <li ng-show="isLoggedIn" ng-class="{ active: isActive('/mydinners') }"><a href="/#/mydinners">My Dinner</a></li>
+                    <li ng-show="!isLoggedIn" ng-class="{ active: isActive('/login') || isActive('/register') }"><a href="/#/login">Login</a></li>
+                    <li ng-show="isLoggedIn"><a href="" ng-click="logOff()">Log Off</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="jumbotron">
+            <ng-view></ng-view>
+        </div>
     </div>
 </body>
 </html>

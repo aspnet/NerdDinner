@@ -21,14 +21,13 @@ namespace NerdDinner.Web.Models
         [MaxLength(1024)]
         public string Description { get; set; }
 
-        [Required]
-        public long UserId { get; set; }
+        [MaxLength(64)]
+        public string UserName { get; set; }
 
         [Required]
         [MaxLength(32)]
         public string ContactPhone { get; set; }
 
-        [Required]
         [MaxLength(64)]
         public string Country { get; set; }
 
@@ -36,21 +35,15 @@ namespace NerdDinner.Web.Models
         [MaxLength(256)]
         public string Address { get; set; }
 
-        [Required]
         public double Latitude { get; set; }
 
-        [Required]
         public double Longitude { get; set; }
-
-        [Required]
-        [MaxLength(64)]
-        public string HostedByName { get; set; }
 
         public ICollection<Rsvp> Rsvps { get; set; }
 
-        public bool IsUserRegistered(int userId)
+        public bool IsUserRegistered(string userName)
         {
-            return Rsvps.Any(r => r.UserId == userId);
+            return Rsvps.Any(r => string.Equals(r.UserName, userName, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

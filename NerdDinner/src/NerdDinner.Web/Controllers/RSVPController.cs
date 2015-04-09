@@ -7,6 +7,7 @@ using NerdDinner.Web.Persistence;
 namespace NerdDinner.Web.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class RsvpController : Controller
     {
         private readonly INerdDinnerRepository _repository;
@@ -17,6 +18,7 @@ namespace NerdDinner.Web.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetRsvpsAsync(int dinnerId)
         {
             // TODO: Validate dinner owner is the user in Identity
@@ -30,7 +32,7 @@ namespace NerdDinner.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRsvpAsync(int dinnerId, int userId)
+        public async Task<IActionResult> CreateRsvpAsync(int dinnerId, string userName)
         {
             // TODO: Get user id from Identity
             var dinner = await _repository.GetDinnerAsync(dinnerId);
@@ -39,12 +41,12 @@ namespace NerdDinner.Web.Controllers
                 return HttpNotFound();
             }
 
-            var rsvp = await _repository.CreateRsvpAsync(dinner, userId);
+            var rsvp = await _repository.CreateRsvpAsync(dinner, userName);
             return new JsonResult(rsvp);
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteRsvpAsync(int dinnerId, int userId)
+        public async Task<IActionResult> DeleteRsvpAsync(int dinnerId, string userName)
         {
             // TODO: Get user id from Identity
             var dinner = await _repository.GetDinnerAsync(dinnerId);
@@ -53,7 +55,7 @@ namespace NerdDinner.Web.Controllers
                 return HttpNotFound();
             }
 
-            await _repository.DeleteRsvpAsync(dinner, userId);
+            await _repository.DeleteRsvpAsync(dinner, userName);
             return new HttpStatusCodeResult((int)HttpStatusCode.NoContent);
         }
     }

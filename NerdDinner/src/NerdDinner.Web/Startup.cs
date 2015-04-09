@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Security;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using NerdDinner.Web.Common;
@@ -40,9 +41,39 @@ namespace NerdDinner.Web
 
                 services.AddScoped<INerdDinnerRepository, NerdDinnerRepository>();
                 services
-                    .AddIdentity<IdentityUser, IdentityRole>()
+                    .AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<NerdDinnerDbContext>()
                     .AddDefaultTokenProviders();
+
+                services.ConfigureFacebookAuthentication(options =>
+                {
+                    options.ClientId = "1628974507321076";
+                    options.ClientSecret = "7c8680db91b175bbe97f77a051380546";
+                });
+
+                services.ConfigureGoogleAuthentication(options =>
+                {
+                    options.ClientId = "135363840336-ervf2q3393fae41b023f8vmvnilthkd3.apps.googleusercontent.com";
+                    options.ClientSecret = "yJYn7pDolux-4ObEqkMkXbdb";
+                });
+
+                services.ConfigureTwitterAuthentication(options =>
+                {
+                    options.ConsumerKey = "9J3j3pSwgbWkgPFH7nAf0Spam";
+                    options.ConsumerSecret = "jUBYkQuBFyqp7G3CUB9SW3AfflFr9z3oQBiNvumYy87Al0W4h8";
+                });
+
+                services.ConfigureMicrosoftAccountAuthentication(options =>
+                {
+                    options.Caption = "MicrosoftAccount - Requires project changes";
+                    options.ClientId = "000000004012C08A";
+                    options.ClientSecret = "GaMQ2hCnqAC6EcDLnXsAeBVIJOLmeutL";
+                });
+
+                //services.Configure<AuthorizationOptions>(options =>
+                //{
+                //    options.AddPolicy("CanEdit", new AuthorizationPolicyBuilder().RequiresClaim("CanEdit", "Allowed").Build());
+                //});
 
                 services.AddMvc().Configure<MvcOptions>(options =>
                 {
@@ -52,7 +83,7 @@ namespace NerdDinner.Web
                         Formatting = Formatting.Indented,
                         ContractResolver = new CamelCasePropertyNamesContractResolver()
                     };
-
+                    
                     var formatter = new JsonOutputFormatter { SerializerSettings = settings };
 
                     options.OutputFormatters.RemoveAt(position);
@@ -64,8 +95,19 @@ namespace NerdDinner.Web
             });
 
             app.UseStaticFiles();
+            app.UseIdentity();
+            app.UseFacebookAuthentication();
+            app.UseGoogleAuthentication();
+            app.UseTwitterAuthentication();
+            app.UseMicrosoftAccountAuthentication();
+
             app.UseMvc(routes =>
             {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller}/{action}/{id?}",
+                    defaults: new { controller = "Home", action = "Index" });
+
                 routes.MapRoute(
                     null,
                     "api/{controller}/{id?}");

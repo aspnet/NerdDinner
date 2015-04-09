@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html ng-app="@ViewBag.ngApp" data-url-base="@Url.Content("~/")">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title – Nerd Dinner</title>
+
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="~/lib/respond/respond.src.js"></script>
+    <script src="~/lib/modernizr/modernizr.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse">
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer class="navbar navbar-fixed-bottom navbar-default text-center">
+            <p><a href="https://github.com/aspnet/NerdDinner">nerd dinner on github</a></p>
+        </footer>
+    </div>
+</body>
+</html>

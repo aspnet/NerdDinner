@@ -12,7 +12,8 @@ namespace NerdDinner.Web.Models
         public long DinnerId { get; set; }
 
         [Required]
-        public long UserId { get; set; }
+        [MaxLength(64)]
+        public string UserName { get; set; }
 
         [JsonIgnore]
         public Dinner Dinner { get; set; }

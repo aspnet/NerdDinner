@@ -1,0 +1,33 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 table-bordered boxed-div" >
+            <div class="boxed-div">
+                <form ng-submit="login()">
+                    <div class="form-group">
+                        <label for="userName">User Name</label>
+                        <input type="text" class="form-control" ng-model="loginForm.userName" id="userName" placeholder="Enter User Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" ng-model="loginForm.password" placeholder="Password">
+                    </div>
+                    <button type="submit" class="btn btn-default">Login</button> or <a href="/#/register">Register</a>
+                </form>
+                <div ng-if="loginForm.loginFailure">
+                    D'oh!
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 table-bordered boxed-div">
+            <div class="boxed-div">
+                <div class="sign-in" ng-click="externalLogin('Google')">
+                    <img class="google-icon" src="~/img/google-sign-in.png" />
+                </div>
+                <div class="sign-in" ng-click="externalLogin('Facebook')">
+                    <img class="facebook-icon" src="~/img/facebook-sign-in.jpg" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Http.Security;
 using Microsoft.AspNet.Identity;
 using NerdDinner.Web.Models;
 
@@ -11,16 +13,20 @@ namespace NerdDinner.Web.Persistence
     {
         private readonly NerdDinnerDbContext _database;
 
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public NerdDinnerRepository(NerdDinnerDbContext database, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public NerdDinnerRepository(NerdDinnerDbContext database, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _database = database;
             _userManager = userManager;
             _signInManager = signInManager;
         }
+
+        public UserManager<ApplicationUser> UserManager => _userManager;
+
+        public SignInManager<ApplicationUser> SignInManager => _signInManager;
 
         public IQueryable<Dinner> Dinners => _database.Dinners;
 
@@ -40,13 +46,13 @@ namespace NerdDinner.Web.Persistence
             }
         }
 
-        public virtual async Task<List<Dinner>> GetDinnersAsync(DateTime? startDate, DateTime? endDate, int userId, string searchQuery, string sort, bool descending)
+        public virtual async Task<List<Dinner>> GetDinnersAsync(DateTime? startDate, DateTime? endDate, string userName, string searchQuery, string sort, bool descending)
         {
             var query = _database.Dinners.AsQueryable();
 
-            if (userId != 0)
+            if (!string.IsNullOrWhiteSpace(userName))
             {
-                query = query.Where(d => d.UserId == userId);
+                query = query.Where(d => string.Equals(d.UserName, userName, StringComparison.OrdinalIgnoreCase));
             }
 
             if (startDate != null)
@@ -75,7 +81,7 @@ namespace NerdDinner.Web.Persistence
         {
             var rsvp = new Rsvp
             {
-                UserId = dinner.UserId
+                UserName = dinner.UserName
             };
 
             dinner.Rsvps = new List<Rsvp> {rsvp};
@@ -112,20 +118,20 @@ namespace NerdDinner.Web.Persistence
             // Else no errors - this operation is idempotent
         }
 
-        public virtual async Task<Rsvp> CreateRsvpAsync(Dinner dinner, int userId)
+        public virtual async Task<Rsvp> CreateRsvpAsync(Dinner dinner, string userName)
         {
             Rsvp rsvp = null;
             if (dinner != null)
             {
-                if (dinner.IsUserRegistered(userId))
+                if (dinner.IsUserRegistered(userName))
                 {
-                    rsvp = dinner.Rsvps.SingleOrDefault(r => r.UserId == userId);
+                    rsvp = dinner.Rsvps.SingleOrDefault(r => string.Equals(r.UserName, userName, StringComparison.OrdinalIgnoreCase));
                 }
                 else
                 {
                     rsvp = new Rsvp
                     {
-                        UserId = userId
+                        UserName = userName
                     };
 
                     dinner.Rsvps.Add(rsvp);
@@ -137,9 +143,9 @@ namespace NerdDinner.Web.Persistence
             return rsvp;
         }
 
-        public virtual async Task DeleteRsvpAsync(Dinner dinner, int userId)
+        public virtual async Task DeleteRsvpAsync(Dinner dinner, string userName)
         {
-            var rsvp = dinner?.Rsvps.SingleOrDefault(r => r.UserId == userId);
+            var rsvp = dinner?.Rsvps.SingleOrDefault(r => string.Equals(r.UserName, userName, StringComparison.OrdinalIgnoreCase));
             if (rsvp != null)
             {
                 _database.Rsvp.Remove(rsvp);
@@ -149,31 +155,46 @@ namespace NerdDinner.Web.Persistence
             // Else no errors - this operation is idempotent
         }
 
-        public async Task<IdentityUser> FindUserAsync(string userName)
+        public virtual async Task<ApplicationUser> FindUserAsync(string userName)
         {
-            return await _userManager.FindByNameAsync(userName);
+            return await UserManager.FindByNameAsync(userName);
         }
 
-        public async Task<IdentityUser> FindExternalUserAsync(string provider, string  key)
-        {
-            return await _userManager.FindByLoginAsync(provider, key);
-        }
+        //public virtual async Task<IdentityUser> FindExternalUserAsync(string provider, string  key)
+        //{
+        //    return await UserManager.FindByLoginAsync(provider, key);
+        //}
 
-        public async Task<IdentityResult> RegisterUserAsync(User user)
-        {
-            var identityUser = new IdentityUser
-            {
-                UserName = user.UserName                
-            };
+        //public virtual async Task<IdentityResult> RegisterUserAsync(User user)
+        //{
+        //    var identityUser = new IdentityUser
+        //    {
+        //        UserName = user.UserName                
+        //    };
 
-            return await _userManager.CreateAsync(identityUser, user.Password);
-        }
+        //    return await UserManager.CreateAsync(identityUser, user.Password);
+        //}
 
-        public async Task<IdentityResult> UnsubscribeUserAsync(string userName)
-        {
-            var user = await _userManager.FindByNameAsync(userName);
-            return await _userManager.DeleteAsync(user);
-        }
+        //public virtual async Task<IdentityResult> UnsubscribeUserAsync(string userName)
+        //{
+        //    var user = await UserManager.FindByNameAsync(userName);
+        //    return await UserManager.DeleteAsync(user);
+        //}
+
+        //public virtual async Task<ExternalLoginInfo> GetExternalLoginInfoAsync(CancellationToken token)
+        //{
+        //    return await SignInManager.GetExternalLoginInfoAsync(cancellationToken: token);
+        //}
+
+        //public virtual async Task<SignInResult> ExternalLoginSignInAsync(string provider, string key, CancellationToken token)
+        //{
+        //    return await SignInManager.ExternalLoginSignInAsync(provider, key, isPersistent: false, cancellationToken: token);
+        //}
+
+        //public virtual AuthenticationProperties ConfigureExternalAuth(string provider, string redirectUrl)
+        //{
+        //    return SignInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+        //}
 
         private IQueryable<Dinner> ApplyDinnerSort(IQueryable<Dinner> query, string sort, bool descending)
         {
@@ -188,13 +209,9 @@ namespace NerdDinner.Web.Persistence
             {
                 query = descending ? query.OrderByDescending(d => d.EventDate) : query.OrderBy(d => d.EventDate);
             }
-            else if (string.Equals(sort, "UserId", StringComparison.OrdinalIgnoreCase))
+            else if (string.Equals(sort, "UserName", StringComparison.OrdinalIgnoreCase))
             {
-                query = descending ? query.OrderByDescending(d => d.UserId) : query.OrderBy(d => d.UserId);
-            }
-            else if (string.Equals(sort, "HostedByName", StringComparison.OrdinalIgnoreCase))
-            {
-                query = descending ? query.OrderByDescending(d => d.HostedByName) : query.OrderBy(d => d.HostedByName);
+                query = descending ? query.OrderByDescending(d => d.UserName) : query.OrderBy(d => d.UserName);
             }
 
             return query;
