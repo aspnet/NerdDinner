@@ -10,7 +10,10 @@
     AuthService.$inject = ['$http', '$q'];
 
     function Dinner($resource) {
-        return $resource('/api/dinners/:id', { Id: "@Id" });
+        return {
+            all: $resource('/api/dinners/:id', { Id: "@Id" }),
+            popular: $resource('/api/dinners/popular')
+        };
     }
 
     function AuthService($http, $q) {

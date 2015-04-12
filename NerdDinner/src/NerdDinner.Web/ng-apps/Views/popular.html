@@ -1,0 +1,41 @@
+﻿<div class="container top-spaced-container">
+    <div class="row">
+        <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+            <img src="/img/caption.png" />
+        </div>
+        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+            <div class="search-box pull-right">
+                <div>
+                    <a href="/dinners/all">View All Upcoming Dinners</a>
+                    <span> or </span>
+                </div>
+                <div>
+                    <input type="text" class="form-control pull-left search-text" ng-model="searchForm.location" id="location" placeholder="Enter your location">
+                    <button type="submit" class="btn btn-default pull-right">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container main-container bottom-spaced-container">
+    <div class="row">
+        <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7 boxed">
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 boxed pull-right">
+            <h4>Popular Dinners</h4>
+            <ul class="popular" ng-repeat="dinner in dinners">
+                <li>
+                    <div>
+                        <a href="" ng-click="selectDinner(dinner.dinnerId)">{{dinner.title}}</a>
+                    </div>
+                    <div>
+                        <span><b>{{dinner.eventDate | date:'MMM dd'}}</b></span>
+                        <span> with </span>
+                        <span>{{dinner.rsvps.length}}</span>
+                        <span> RSVPs </span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

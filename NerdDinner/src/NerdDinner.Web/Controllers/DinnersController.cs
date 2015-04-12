@@ -56,6 +56,13 @@ namespace NerdDinner.Web.Controllers
             return await _repository.GetDinnersAsync(startDate, endDate, userName, searchQuery, sort, descending);
         }
 
+        [HttpGet("popular")]
+        [AllowAnonymous]
+        public async Task<IEnumerable<Dinner>> GetPopularDinnersAsync()
+        {
+            return await _repository.GetPopularDinnersAsync();
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateDinnerAsync([FromBody] Dinner dinner)
         {

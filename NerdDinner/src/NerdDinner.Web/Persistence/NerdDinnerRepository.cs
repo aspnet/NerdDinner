@@ -59,6 +59,10 @@ namespace NerdDinner.Web.Persistence
             {
                 query = query.Where(d => d.EventDate >= startDate);
             }
+            else
+            {
+                query = query.Where(d => d.EventDate >= DateTime.Now);
+            }
 
             if (endDate != null)
             {
@@ -75,6 +79,18 @@ namespace NerdDinner.Web.Persistence
             query = ApplyDinnerSort(query, sort, descending);
 
             return await query.ToListAsync();
+        }
+
+        public virtual async Task<List<Dinner>> GetPopularDinnersAsync()
+        {
+            var result = await _database.Dinners
+                .Include(d => d.Rsvps)
+                .ToListAsync();
+
+            return result
+                .OrderByDescending(d => d.Rsvps.Count)
+                .Take(5)
+                .ToList();
         }
 
         public virtual async Task<Dinner> CreateDinnerAsync(Dinner dinner)

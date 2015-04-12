@@ -23,6 +23,8 @@ namespace NerdDinner.Web.Persistence
 
         Task<List<Dinner>> GetDinnersAsync(DateTime? startDate, DateTime? endDate, string userName, string searchQuery, string sort, bool descending);
 
+        Task<List<Dinner>> GetPopularDinnersAsync();
+
         Task<Dinner> CreateDinnerAsync(Dinner item);
 
         Task<Dinner> UpdateDinnerAsync(Dinner dinner);

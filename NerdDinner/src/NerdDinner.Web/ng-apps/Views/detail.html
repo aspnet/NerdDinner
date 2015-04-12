@@ -1,13 +1,21 @@
-﻿﻿<div>
-    <div>
-        <p><b>{{dinner.title}}</b></p>
-        <p><span>When: </span><span>{{dinner.eventDate}}</span></p>
-        <p><span>Where: </span><span>{{dinner.address}}</span></p>
-        <p><span>Description: </span><span>{{dinner.description}}</span></p>
-        <p><span>Organizer: </span><span>{{dinner.userName}}</span></p>
-        <p><span>Who's coming:</span></p>
-        <p ng-repeat="rsvp in dinner.rsvps">
-            <span>{{rsvp.userName}}</span>
-        </p>
+﻿<div class="container main-container bottom-spaced-container">
+    <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 boxed">
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 boxed pull-right">
+            <ul class="detail">
+                <li><h4>{{dinner.title}}</h4></li>
+                <li><b><span>When: </span></b><span>{{dinner.eventDate | date:'MMM dd, yyyy @ hh:mm'}}</span></li>
+                <li><b><span>Where: </span></b><span>{{dinner.address}}</span></li>
+                <li><b><span>Description: </span></b><span>{{dinner.description}}</span></li>
+                <li><b><span>Organizer: </span></b><span>{{dinner.userName}}</span></li>
+                <li><b><span>Who's coming:</span></b></li>
+                <li>
+                    <ul class="guests" ng-repeat="rsvp in dinner.rsvps">
+                        <li>{{rsvp.userName}}</li>
+                    </ul>                    
+                </li>
+            </ul>
+        </div>
     </div>
 </div>

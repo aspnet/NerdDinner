@@ -1,14 +1,13 @@
-﻿<div class="container">
+﻿<div class="container main-container bottom-spaced-container">
     <div class="row">
-        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 table-bordered boxed-div" >
-            <div class="boxed-div">
+        <div class="logon-box bordered boxed pull-left">
+            <div class="boxed">
+                <h4>Nerd Dinner Login</h4>
                 <form ng-submit="login()">
                     <div class="form-group">
-                        <label for="userName">User Name</label>
-                        <input type="text" class="form-control" ng-model="loginForm.userName" id="userName" placeholder="Enter User Name">
+                        <input type="text" class="form-control" ng-model="loginForm.userName" id="userName" placeholder="User Name">
                     </div>
                     <div class="form-group">
-                        <label for="password">Password</label>
                         <input type="password" class="form-control" id="password" ng-model="loginForm.password" placeholder="Password">
                     </div>
                     <button type="submit" class="btn btn-default">Login</button> or <a href="/#/register">Register</a>
@@ -18,8 +17,14 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 table-bordered boxed-div">
-            <div class="boxed-div">
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-uppercase text-center parent boxed">
+            <div class="child">
+                or
+            </div>
+        </div>
+        <div class="logon-box bordered boxed pull-right">
+            <div class="boxed">
+                <h4>Social Login</h4>
                 <div class="sign-in" ng-click="externalLogin('Google')">
                     <img class="google-icon" src="~/img/google-sign-in.png" />
                 </div>
