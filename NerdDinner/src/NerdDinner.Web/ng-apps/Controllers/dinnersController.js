@@ -3,18 +3,18 @@
 
     angular
         .module('nerdDinner')
-        .controller('DinnersPopularController', DinnersPopularController)
-        .controller('DinnersMyController', DinnersMyController)
-        .controller('DinnersListController', DinnersListController)
-        .controller('DinnersDetailController', DinnersDetailController)
-        .controller('DinnersAddController', DinnersAddController)
-        .controller('DinnersEditController', DinnersEditController)
-        .controller('DinnersDeleteController', DinnersDeleteController)
+        .controller('dinnersPopularController', dinnersPopularController)
+        .controller('dinnersMyController', dinnersMyController)
+        .controller('dinnersListController', dinnersListController)
+        .controller('dinnersDetailController', dinnersDetailController)
+        .controller('dinnersAddController', dinnersAddController)
+        .controller('dinnersEditController', dinnersEditController)
+        .controller('dinnersDeleteController', dinnersDeleteController)
 
     /* Dinners Popular Controller  */
-    DinnersPopularController.$inject = ['$scope', '$location', 'Dinner'];
+    dinnersPopularController.$inject = ['$scope', '$location', 'Dinner'];
 
-    function DinnersPopularController($scope, $location, Dinner) {
+    function dinnersPopularController($scope, $location, Dinner) {
         $scope.dinners = Dinner.popular.query();
         $scope.selectDinner = function (dinnerId) {
             $location.path('/dinners/details/' + dinnerId);
@@ -22,9 +22,9 @@
     }
 
     /* Dinners My Controller  */
-    DinnersMyController.$inject = ['$scope', '$location', 'Dinner'];
+    dinnersMyController.$inject = ['$scope', '$location', 'Dinner'];
 
-    function DinnersMyController($scope, $location, Dinner) {
+    function dinnersMyController($scope, $location, Dinner) {
         $scope.dinners = Dinner.all.query({ 'myDinners': 'true' });
         $scope.selectDinner = function (dinnerId) {
             $location.path('/dinners/details/' + dinnerId);
@@ -32,9 +32,9 @@
     }
 
     /* Dinners List Controller  */
-    DinnersListController.$inject = ['$scope', '$location', 'Dinner'];
+    dinnersListController.$inject = ['$scope', '$location', 'Dinner'];
 
-    function DinnersListController($scope, $location, Dinner) {
+    function dinnersListController($scope, $location, Dinner) {
         $scope.dinners = Dinner.all.query();
         $scope.selectDinner = function (dinnerId) {
             $location.path('/dinners/details/' + dinnerId);
@@ -42,16 +42,16 @@
     }
 
     /* Dinners Detail Controller  */
-    DinnersDetailController.$inject = ['$scope', '$routeParams', 'Dinner'];
+    dinnersDetailController.$inject = ['$scope', '$routeParams', 'Dinner'];
 
-    function DinnersDetailController($scope, $routeParams, Dinner) {
+    function dinnersDetailController($scope, $routeParams, Dinner) {
         $scope.dinner = Dinner.all.get({ id: $routeParams.id });
     }
 
     /* Dinners Create Controller */
-    DinnersAddController.$inject = ['$scope', '$location', 'Dinner'];
+    dinnersAddController.$inject = ['$scope', '$location', 'Dinner'];
 
-    function DinnersAddController($scope, $location, Dinner) {
+    function dinnersAddController($scope, $location, Dinner) {
         $scope.dinner = new Dinner();
         $scope.add = function () {
             $scope.dinner.$save(
@@ -68,9 +68,9 @@
     }
 
     /* Dinners Edit Controller */
-    DinnersEditController.$inject = ['$scope', '$routeParams', '$location', 'Dinner'];
+    dinnersEditController.$inject = ['$scope', '$routeParams', '$location', 'Dinner'];
 
-    function DinnersEditController($scope, $routeParams, $location, Dinner) {
+    function dinnersEditController($scope, $routeParams, $location, Dinner) {
         $scope.dinner = Dinner.get({ id: $routeParams.id });
         $scope.edit = function () {
             $scope.dinner.$save(
@@ -87,9 +87,9 @@
     }
 
     /* Dinners Delete Controller  */
-    DinnersDeleteController.$inject = ['$scope', '$routeParams', '$location', 'Dinner'];
+    dinnersDeleteController.$inject = ['$scope', '$routeParams', '$location', 'Dinner'];
 
-    function DinnersDeleteController($scope, $routeParams, $location, Dinner) {
+    function dinnersDeleteController($scope, $routeParams, $location, Dinner) {
         $scope.dinner = Dinner.get({ id: $routeParams.id });
         $scope.remove = function () {
             $scope.dinner.$remove({ id: $scope.dinner.DinnerId }, function () {

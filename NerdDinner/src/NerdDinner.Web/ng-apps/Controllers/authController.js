@@ -3,13 +3,13 @@
 
     angular
         .module('nerdDinner')
-        .controller('LoginController', LoginController)
-        .controller('RegisterController', RegisterController)
+        .controller('loginController', loginController)
+        .controller('registerController', registerController)
 
     /* Login Controller  */
-    LoginController.$inject = ['$scope', '$routeParams', '$location', 'AuthService'];
+    loginController.$inject = ['$scope', '$routeParams', '$location', 'authService'];
 
-    function LoginController($scope, $routeParams, $location, AuthService) {
+    function loginController($scope, $routeParams, $location, authService) {
         $scope.loginForm = {
             userName: '',
             password: '',
@@ -18,24 +18,24 @@
         };
 
         $scope.login = function () {
-            var result = AuthService.login($scope.loginForm.userName, $scope.loginForm.password);
+            var result = authService.login($scope.loginForm.userName, $scope.loginForm.password);
             result.then(function (result) {
-                validateLogin($scope, $location, result, AuthService)
+                validateLogin($scope, $location, result, authService)
             });
         }
 
         $scope.externalLogin = function (provider) {
-            var result = AuthService.externalLogin(provider, $location.path);
+            var result = authService.externalLogin(provider, $location.path);
             result.then(function (result) {
-                validateLogin($scope, $location, result, AuthService)
+                validateLogin($scope, $location, result, authService)
             });
         }
     }
 
     /* Register Controller  */
-    RegisterController.$inject = ['$scope', '$routeParams', '$location', 'AuthService'];
+    registerController.$inject = ['$scope', '$routeParams', '$location', 'authService'];
 
-    function RegisterController($scope, $routeParams, $location, AuthService) {
+    function registerController($scope, $routeParams, $location, authService) {
         $scope.registerForm = {
             userName: '',
             password: '',
@@ -45,9 +45,9 @@
         };
 
         $scope.register = function () {
-            var result = AuthService.register($scope.registerForm.userName, $scope.registerForm.password, $scope.registerForm.confirmPassword);
+            var result = authService.register($scope.registerForm.userName, $scope.registerForm.password, $scope.registerForm.confirmPassword);
             result.then(function (result) {
-                if (AuthService.isUserLoggedIn()) {
+                if (authService.isUserLoggedIn()) {
                     if ($scope.registerForm.returnUrl !== undefined) {
                         $location.path($scope.registerForm.returnUrl);
                     } else {
@@ -61,8 +61,8 @@
         }
     }
 
-    function validateLogin($scope, $location, result, AuthService) {
-        if (AuthService.isUserLoggedIn()) {
+    function validateLogin($scope, $location, result, authService) {
+        if (authService.isUserLoggedIn()) {
             if ($scope.loginForm.returnUrl !== undefined) {
                 $location.path($scope.loginForm.returnUrl);
             } else {

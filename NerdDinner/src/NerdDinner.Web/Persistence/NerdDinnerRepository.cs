@@ -34,16 +34,9 @@ namespace NerdDinner.Web.Persistence
 
         public virtual async Task<Dinner> GetDinnerAsync(int dinnerId)
         {
-            try
-            {
-                return await _database.Dinners
-                    .Include(d => d.Rsvps)
-                    .SingleOrDefaultAsync(d => d.DinnerId == dinnerId);
-            }
-            catch (AggregateException)
-            {
-                return null;
-            }
+            return await _database.Dinners
+                .Include(d => d.Rsvps)
+                .SingleOrDefaultAsync(d => d.DinnerId == dinnerId);
         }
 
         public virtual async Task<List<Dinner>> GetDinnersAsync(DateTime? startDate, DateTime? endDate, string userName, string searchQuery, string sort, bool descending)
@@ -83,14 +76,11 @@ namespace NerdDinner.Web.Persistence
 
         public virtual async Task<List<Dinner>> GetPopularDinnersAsync()
         {
-            var result = await _database.Dinners
+            return await _database.Dinners
                 .Include(d => d.Rsvps)
-                .ToListAsync();
-
-            return result
                 .OrderByDescending(d => d.Rsvps.Count)
                 .Take(5)
-                .ToList();
+                .ToListAsync();
         }
 
         public virtual async Task<Dinner> CreateDinnerAsync(Dinner dinner)
@@ -100,7 +90,7 @@ namespace NerdDinner.Web.Persistence
                 UserName = dinner.UserName
             };
 
-            dinner.Rsvps = new List<Rsvp> {rsvp};
+            dinner.Rsvps = new List<Rsvp> { rsvp };
 
             _database.Add(dinner);
             _database.Add(rsvp);
@@ -121,7 +111,7 @@ namespace NerdDinner.Web.Persistence
             var dinner = await GetDinnerAsync(dinnerId);
             if (dinner != null)
             {
-                foreach(Rsvp rsvp in dinner.Rsvps)
+                foreach (Rsvp rsvp in dinner.Rsvps)
                 {
                     _database.Rsvp.Remove(rsvp);
                 }

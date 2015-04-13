@@ -12,47 +12,47 @@
             .when('/', {
                 title: 'Nerd Dinner',
                 templateUrl: '/views/popular.html',
-                controller: 'DinnersPopularController'
+                controller: 'dinnersPopularController'
             })
             .when('/dinners/all', {
                 title: 'Nerd Dinner - All Dinners',
                 templateUrl: '/views/list.html',
-                controller: 'DinnersListController'
+                controller: 'dinnersListController'
             })
             .when('/dinners/my', {
                 title: 'Nerd Dinner - My Dinners',
                 templateUrl: '/views/my.html',
-                controller: 'DinnersMyController'
+                controller: 'dinnersMyController'
             })
             .when('/dinners/details/:id', {
                 title: 'Nerd Dinner - Dinner Details',
                 templateUrl: '/views/detail.html',
-                controller: 'DinnersDetailController'
+                controller: 'dinnersDetailController'
             })
             .when('/dinners/add', {
                 title: 'Nerd Dinner - Host Dinner',
                 templateUrl: '/views/add.html',
-                controller: 'DinnersAddController'
+                controller: 'dinnersAddController'
             })
             .when('/dinners/edit/:id', {
                 title: 'Nerd Dinner - Edit Dinner',
                 templateUrl: '/views/edit.html',
-                controller: 'DinnersEditController'
+                controller: 'dinnersEditController'
             })
             .when('/dinners/delete/:id', {
                 title: 'Nerd Dinner - Delete Dinner',
                 templateUrl: '/views/delete.html',
-                controller: 'DinnersDeleteController'
+                controller: 'dinnersDeleteController'
             })
             .when('/login', {
                 title: 'Nerd Dinner - Log In',
                 templateUrl: '/Account/Login',
-                controller: 'LoginController'
+                controller: 'loginController'
             })
             .when('/register', {
                 title: 'Nerd Dinner - Register',
                 templateUrl: '/Account/Register',
-                controller: 'RegisterController'
+                controller: 'registerController'
             })
             .otherwise({ redirectTo: '/' });
 

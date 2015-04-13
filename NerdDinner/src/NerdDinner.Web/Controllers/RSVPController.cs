@@ -32,30 +32,31 @@ namespace NerdDinner.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRsvpAsync(int dinnerId, string userName)
+        public async Task<IActionResult> CreateRsvpAsync(int dinnerId)
         {
-            // TODO: Get user id from Identity
             var dinner = await _repository.GetDinnerAsync(dinnerId);
             if (dinner == null)
             {
                 return HttpNotFound();
             }
 
-            var rsvp = await _repository.CreateRsvpAsync(dinner, userName);
+            var user = await _repository.FindUserAsync(Context.User.Identity.Name);
+            var rsvp = await _repository.CreateRsvpAsync(dinner, user.UserName);
             return new JsonResult(rsvp);
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteRsvpAsync(int dinnerId, string userName)
+        public async Task<IActionResult> DeleteRsvpAsync(int dinnerId)
         {
-            // TODO: Get user id from Identity
             var dinner = await _repository.GetDinnerAsync(dinnerId);
             if (dinner == null)
             {
                 return HttpNotFound();
             }
 
-            await _repository.DeleteRsvpAsync(dinner, userName);
+            var user = await _repository.FindUserAsync(Context.User.Identity.Name);
+
+            await _repository.DeleteRsvpAsync(dinner, user.UserName);
             return new HttpStatusCodeResult((int)HttpStatusCode.NoContent);
         }
     }

@@ -1,0 +1,6 @@
+﻿<div>
+    <a href="#" ng-show="!dinner.isUserInRsvp && !dinner.isUserHost" ng-click="rsvp.addRsvp()">RSVP for this event</a>
+    <a href="#" ng-show="dinner.isUserInRsvp && !dinner.isUserHost" ng-click="rsvp.cancelRsvp()">Cancel your RSVP</a>
+    <span ng-show="dinner.isUserHost">You are the host for this event!</span>
+    <span ng-show="rsvp.showMessage">{{rsvp.message}}</span>
+</div>

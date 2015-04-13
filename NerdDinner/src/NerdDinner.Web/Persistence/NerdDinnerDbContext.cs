@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using System;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Metadata;
@@ -11,6 +12,11 @@ namespace NerdDinner.Web.Persistence
         public virtual DbSet<Dinner> Dinners { get; set; }
 
         public virtual DbSet<Rsvp> Rsvp { get; set; }
+
+        public NerdDinnerDbContext()
+        {
+            Database.EnsureCreatedAsync().Wait();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

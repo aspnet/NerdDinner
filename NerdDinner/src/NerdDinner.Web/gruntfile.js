@@ -4,6 +4,7 @@
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-less');
 
     grunt.initConfig({
         bower: {
@@ -21,7 +22,7 @@
                 force: true
             },
 
-            build: ['wwwroot/views', 'wwwroot/app.js']
+            build: ['wwwroot/views', 'wwwroot/css', 'wwwroot/app.js']
         },
         
         copy: ﻿{
@@ -49,6 +50,15 @@
             }
         },
 
+        less: {
+            development: {
+                options: {
+                    paths: ["ng-apps/Styles"],
+                },
+                files: { "wwwroot/css/site.css": "ng-apps/Styles/site.less" }
+            },
+        },
+        
         watch: {
             scripts: {
                 files: ['Scripts/**/*.js'],
@@ -58,5 +68,5 @@
     });
 
     // define tasks
-    grunt.registerTask('default', ['clean', 'copy', 'bower:install', 'uglify', 'watch']);
+    grunt.registerTask('default', ['clean', 'copy', 'bower:install', 'uglify', 'less', 'watch']);
 };

@@ -6,23 +6,23 @@
         .controller('HomeController', HomeController);
 
     /* Home Controller  */
-    HomeController.$inject = ['$rootScope', '$scope', '$location', 'AuthService'];
+    HomeController.$inject = ['$rootScope', '$scope', '$location', 'authService'];
 
-    function HomeController($rootScope, $scope, $location, AuthService) {
+    function HomeController($rootScope, $scope, $location, authService) {
         $scope.isActive = function (viewLocation) {
             return viewLocation === $location.path();
         };
 
-        $scope.$watch(AuthService.isUserLoggedIn, function (isUserLoggedIn) {
+        $scope.$watch(authService.isUserLoggedIn, function (isUserLoggedIn) {
             $scope.isUserLoggedIn = isUserLoggedIn;
         });
 
-        $scope.$watch(AuthService.currentUser, function (currentUser) {
+        $scope.$watch(authService.currentUser, function (currentUser) {
             $scope.currentUser = currentUser;
         });
 
         $scope.logOff = function () {
-            AuthService.logOff();
+            authService.logOff();
         };
 
         $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
