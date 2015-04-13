@@ -18,7 +18,7 @@
 
     function AuthService($http, $q) {
         var currentUser;
-        var isLoggedIn;
+        var isUserLoggedIn;
 
         return {
             register: function (userName, password, confirmPassword) {
@@ -33,17 +33,20 @@
                     '/Account/Register', registerModel
                 ).
                 success(function (data) {
-                    if (data) {
-                        isLoggedIn = true;
-                        deferredObject.resolve({ success: true });
+                    if (data.success) {
+                        isUserLoggedIn = true;
+                        currentUser = data;
                     } else {
-                        isLoggedIn = false;
-                        deferredObject.resolve({ success: false });
+                        isUserLoggedIn = false;
+                        currentUser = null;
                     }
+
+                    deferredObject.resolve({ error: data });
                 }).
-                error(function () {
-                    isLoggedIn = false;
-                    deferredObject.resolve({ success: false });
+                error(function (err) {
+                    isUserLoggedIn = false;
+                    currentUser = null;
+                    deferredObject.resolve({ error: err });
                 });
 
                 return deferredObject.promise;
@@ -59,33 +62,36 @@
                 ).
                 success(function (data) {
                     if (data) {
-                        isLoggedIn = true;
+                        isUserLoggedIn = true;
+                        currentUser = data;
                         deferredObject.resolve({ success: true });
                     } else {
-                        isLoggedIn = false;
+                        isUserLoggedIn = false;
+                        currentUser = null;
                         deferredObject.resolve({ success: false });
                     }
                 }).
-                error(function () {
-                    isLoggedIn = false;
-                    deferredObject.resolve({ success: false });
+                error(function (err) {
+                    isUserLoggedIn = false;
+                    currentUser = null;
+                    deferredObject.resolve({ error: err });
                 });
 
                 return deferredObject.promise;
             },
 
             logOff: function () {
-                isLoggedIn = false;
+                isUserLoggedIn = false;
                 currentUser = null;
                 $http.post('/Account/LogOff');
             },
 
             externalLogin: function (provider, returnUrl) {
-                var externalProviderUrl = '/Account/ExternalLogin?Provider=' + provider + '&ReturnUrl=http%3A%2F%2Flocalhost%3A5002%2F'
+                var externalProviderUrl = '/Account/ExternalLogin?Provider=' + provider + '&ReturnUrl=' + returnUrl;
                 window.location = externalProviderUrl;
             },
 
-            isLoggedIn: function () { return isLoggedIn },
+            isUserLoggedIn: function () { return isUserLoggedIn },
             currentUser: function () { return currentUser },
         };
     }

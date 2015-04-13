@@ -1,9 +1,16 @@
-﻿﻿<div>
-    <div ng-repeat="dinner in dinners">
-        <a href="" ng-click="selectDinner(dinner.dinnerId)">{{dinner.title}}</a>
-        <span> on </span>
-        <span><b>{{dinner.eventDate}}</b></span>
-        <span> at </span>
-        <span>{{dinner.address}}</span>
+﻿<div class="container main-container bottom-spaced-container">
+    <div class="row">
+        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 boxed">
+            <h4>My Dinners</h4>
+            <ul class="popular" ng-repeat="dinner in dinners">
+                <li>
+                    <a href="" ng-click="selectDinner(dinner.dinnerId)">{{dinner.title}}</a>
+                    <span> on </span>
+                    <span><b>{{dinner.eventDate | date:'MMM dd, yyyy @ hh:mm a'}}</b></span>
+                    <span> at </span>
+                    <span>{{dinner.address}}</span>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>

@@ -20,14 +20,14 @@
         $scope.login = function () {
             var result = AuthService.login($scope.loginForm.userName, $scope.loginForm.password);
             result.then(function (result) {
-                validateLogin($scope, $location, result)
+                validateLogin($scope, $location, result, AuthService)
             });
         }
 
         $scope.externalLogin = function (provider) {
-            var result = AuthService.externalLogin(provider, 'http://localhost:5002/');
+            var result = AuthService.externalLogin(provider, $location.path);
             result.then(function (result) {
-                validateLogin($scope, $location, result)
+                validateLogin($scope, $location, result, AuthService)
             });
         }
     }
@@ -40,38 +40,37 @@
             userName: '',
             password: '',
             confirmPassword: '',
-            registrationFailure: false
+            registrationFailure: false,
+            errorMessage: ''
         };
 
         $scope.register = function () {
             var result = AuthService.register($scope.registerForm.userName, $scope.registerForm.password, $scope.registerForm.confirmPassword);
             result.then(function (result) {
-                if (result.success) {
-                    $scope.isUserLoggedIn = true;
+                if (AuthService.isUserLoggedIn()) {
                     if ($scope.registerForm.returnUrl !== undefined) {
                         $location.path($scope.registerForm.returnUrl);
                     } else {
                         $location.path('/');
                     }
                 } else {
-                    $scope.isUserLoggedIn = false;
                     $scope.registerForm.registrationFailure = true;
+                    $scope.registerForm.errorMessage = result.error;
                 }
             });
         }
+    }
 
-        function validateLogin($scope, $location, result) {
-            if (result.success) {
-                $scope.isUserLoggedIn = true;
-                if ($scope.loginForm.returnUrl !== undefined) {
-                    $location.path($scope.loginForm.returnUrl);
-                } else {
-                    $location.path('/');
-                }
+    function validateLogin($scope, $location, result, AuthService) {
+        if (AuthService.isUserLoggedIn()) {
+            if ($scope.loginForm.returnUrl !== undefined) {
+                $location.path($scope.loginForm.returnUrl);
             } else {
-                $scope.isUserLoggedIn = false;
-                $scope.loginForm.loginFailure = true;
+                $location.path('/');
             }
+        } else {
+            $scope.loginForm.loginFailure = true;
+            $scope.loginForm.errorMessage = result.error;
         }
     }
 })();

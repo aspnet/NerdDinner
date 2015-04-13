@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using NerdDinner.Web.Models;
 using NerdDinner.Web.Persistence;
+using Newtonsoft.Json.Linq;
 
 namespace NerdDinner.Web.Controllers
 {
@@ -29,15 +30,15 @@ namespace NerdDinner.Web.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<bool> Login([FromBody] LoginViewModel model)
+        public async Task<string> Login([FromBody] LoginViewModel model)
         {
             var result = await _repository.SignInManager.PasswordSignInAsync(model.UserName, model.Password, false, false);
             if (result.Succeeded)
             {
-                return true;
+                return model.UserName;
             }
 
-            return false;
+            return null;
         }
 
         [HttpPost]
@@ -55,17 +56,26 @@ namespace NerdDinner.Web.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<bool> Register([FromBody] RegisterViewModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
         {
             var user = new ApplicationUser { UserName = model.UserName };
             var result = await _repository.UserManager.CreateAsync(user, model.Password, cancellationToken: Context.RequestAborted);
             if (result.Succeeded)
             {
                 await _repository.SignInManager.SignInAsync(user, isPersistent: false);
-                return true;
+                var success = new JObject("success", true);
+                return new JsonResult(success);
             }
 
-            return false;
+            var errors = new JObject();
+            errors.Add("success", false);
+
+            foreach (var error in result.Errors)
+            {
+                errors.Add(error.Code, error.Description);
+            }
+
+            return new JsonResult(errors);
         }
 
         [AllowAnonymous]
@@ -106,61 +116,6 @@ namespace NerdDinner.Web.Controllers
             return View();
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl = null)
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Manage");
-            }
-
-                // Get the information about the user from the external login provider
-                var info = await _repository.SignInManager.GetExternalLoginInfoAsync(cancellationToken: Context.RequestAborted);
-                if (info == null)
-                {
-                    return View("ExternalLoginFailure");
-                }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await _repository.UserManager.CreateAsync(user, cancellationToken: Context.RequestAborted);
-
-                if (result.Succeeded)
-                {
-                    result = await _repository.UserManager.AddLoginAsync(user, info, cancellationToken: Context.RequestAborted);
-                    if (result.Succeeded)
-                    {
-                        await _repository.SignInManager.SignInAsync(user, isPersistent: false, cancellationToken: Context.RequestAborted);
-                        return RedirectToLocal(returnUrl);
-                    }
-                }
-                AddErrors(result);
-
-            ViewBag.ReturnUrl = returnUrl;
-            return View(model);
-        }
-
-        [AllowAnonymous]
-        public ActionResult ExternalLoginFailure()
-        {
-            return View();
-        }
-
-        #region Helpers
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error.Description);
-            }
-        }
-
-        private async Task<ApplicationUser> GetCurrentUserAsync()
-        {
-            return await _repository.UserManager.FindByIdAsync(Context.User.Identity.GetUserId(), cancellationToken: Context.RequestAborted);
-        }
-
         private ActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
@@ -172,7 +127,5 @@ namespace NerdDinner.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
-
-        #endregion
     }
 }

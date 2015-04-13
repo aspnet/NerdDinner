@@ -35,12 +35,17 @@
         <div>
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                         <img src="~/img/logo.png" />
                     </div>
-                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-right">
-                        <a ng-show="!isLoggedIn" href="/#/login">Login</a>
-                        <a ng-show="isLoggedIn" href="" ng-click="logOff()">Log Off</a>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-right">
+                        <span ng-show="!isUserLoggedIn">
+                            <span>[ </span><a ng-show="!isUserLoggedIn" href="/#/login">Login</a><span> ]</span>
+                        </span>
+                        <span ng-show="isUserLoggedIn">
+                            <span ng-bind="'Welcome ' + currentUser + '!'"></span>
+                            <span>[ </span><a href="" ng-click="logOff()">Log Off</a><span> ]</span>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -48,7 +53,7 @@
                 <ul class="nav nav-tabs navbar-right">
                     <li role="presentation" ng-class="{ active: isActive('/') || isActive('dinners/details/{id}') }"><a href="/">Find Dinner</a></li>
                     <li role="presentation" ng-class="{ active: isActive('/dinners/add') }"><a href="/#/dinners/add">Host Dinner</a></li>
-                    <li role="presentation" ng-class="{ active: isActive('/mydinners') }"><a href="/#/mydinners">My Dinners</a></li>
+                    <li role="presentation" ng-class="{ active: isActive('/mydinners') }"><a href="/#/dinners/my">My Dinners</a></li>
                 </ul>
             </div>
         </div>

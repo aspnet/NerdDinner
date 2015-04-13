@@ -12,10 +12,15 @@
         $scope.isActive = function (viewLocation) {
             return viewLocation === $location.path();
         };
-        $scope.$watch(AuthService.isLoggedIn, function (isLoggedIn) {
-            $scope.isLoggedIn = isLoggedIn;
-            $scope.currentUser = AuthService.currentUser();
+
+        $scope.$watch(AuthService.isUserLoggedIn, function (isUserLoggedIn) {
+            $scope.isUserLoggedIn = isUserLoggedIn;
         });
+
+        $scope.$watch(AuthService.currentUser, function (currentUser) {
+            $scope.currentUser = currentUser;
+        });
+
         $scope.logOff = function () {
             AuthService.logOff();
         };

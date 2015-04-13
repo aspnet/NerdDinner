@@ -1,4 +1,11 @@
 ﻿<div class="container main-container bottom-spaced-container">
+    <div class="row" ng-show="loginForm.loginFailure">
+        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 bordered boxed alert-danger">
+            <div class="boxed">
+                <span>Login Failed.</span>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="logon-box bordered boxed pull-left">
             <div class="boxed">
@@ -12,9 +19,6 @@
                     </div>
                     <button type="submit" class="btn btn-default">Login</button> or <a href="/#/register">Register</a>
                 </form>
-                <div ng-if="loginForm.loginFailure">
-                    D'oh!
-                </div>
             </div>
         </div>
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-uppercase text-center parent boxed">
