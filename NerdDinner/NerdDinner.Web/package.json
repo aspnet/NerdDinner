@@ -1,0 +1,10 @@
+{
+  "name": "ASP.NET",
+  "version": "0.0.0",
+  "devDependencies": {
+    "gulp": "3.8.11",
+    "gulp-less": "3.0.3",
+    "gulp-uglifyjs": "0.6.1",
+    "rimraf": "2.2.8"
+  }
+}

@@ -1,0 +1,7 @@
+{
+    "Data": {
+        "DefaultConnection": {
+            "ConnectionString": "Server=tcp:zm4o6p4e1l.database.windows.net;Database=NDinner;User ID=writer-sql;Password=Schakra01*;Trusted_Connection=False;Encrypt=True;MultipleActiveResultSets=true;"
+        }
+    }
+}
