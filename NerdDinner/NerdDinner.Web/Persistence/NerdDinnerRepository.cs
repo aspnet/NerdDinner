@@ -26,7 +26,7 @@ namespace NerdDinner.Web.Persistence
                 .SingleOrDefaultAsync(d => d.DinnerId == dinnerId);
         }        
 
-        public virtual async Task<List<Dinner>> GetDinnersAsync(DateTime? startDate, DateTime? endDate, string userName, string searchQuery, string sort, bool descending, double? lat, double? lng)
+        public virtual async Task<List<Dinner>> GetDinnersAsync(DateTime? startDate, DateTime? endDate, string userName, string searchQuery, string sort, bool descending, double? lat, double? lng, int? pageIndex, int? pageSize)
         {
             var query = _database.Dinners.AsQueryable();
 
@@ -68,25 +68,21 @@ namespace NerdDinner.Web.Persistence
 
             query = ApplyDinnerSort(query, sort, descending);
 
+            if (pageIndex.HasValue && pageSize.HasValue)
+            {
+                query = query.Skip((pageIndex.Value - 1) * pageSize.Value).Take(pageSize.Value);
+            }
+
             return await query.ToListAsync();
         }
 
         public virtual async Task<List<Dinner>> GetPopularDinnersAsync()
         {
-            //return await _database.Dinners
-            //    .Include(d => d.Rsvps)
-            //    .OrderByDescending(d => d.Rsvps.Count)
-            //    .Take(5)
-            //    .ToListAsync();
-
-            var result = await _database.Dinners
+            return await _database.Dinners
                 .Include(d => d.Rsvps)
-                .ToListAsync();
-
-            return result
                 .OrderByDescending(d => d.Rsvps.Count)
-                .Take(5)
-                .ToList();
+                .Take(8)
+                .ToListAsync();
         }
 
         public virtual async Task<Dinner> CreateDinnerAsync(Dinner dinner)
@@ -128,6 +124,11 @@ namespace NerdDinner.Web.Persistence
             }
 
             // Else no errors - this operation is idempotent
+        }
+
+        public virtual int GetDinnersCount()
+        {
+            return _database.Dinners.Where(d => d.EventDate >= DateTime.Now).Count();
         }
 
         public virtual async Task<Rsvp> CreateRsvpAsync(Dinner dinner, string userName)

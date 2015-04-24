@@ -45,11 +45,13 @@ namespace NerdDinner.Web.Controllers
             DateTime? endDate,
             double? lat,
             double? lng,
+            int? pageIndex,
+            int? pageSize,
             string searchQuery = null,
             string sort = null,
             bool descending = false)
         {
-            return await _repository.GetDinnersAsync(startDate, endDate, string.Empty, searchQuery, sort, descending, lat, lng);
+            return await _repository.GetDinnersAsync(startDate, endDate, string.Empty, searchQuery, sort, descending, lat, lng, pageIndex, pageSize);
         }
 
         [HttpGet("my")]
@@ -58,14 +60,15 @@ namespace NerdDinner.Web.Controllers
             DateTime? endDate,
             double? lat,
             double? lng,
+            int? pageIndex,
+            int? pageSize,
             string searchQuery = null,
             string sort = null,
             bool descending = false)
         {
             var user = await _userManager.FindByIdAsync(Context.User.GetUserId());
-            return await _repository.GetDinnersAsync(startDate, endDate, user.UserName, searchQuery, sort, descending, lat, lng);
+            return await _repository.GetDinnersAsync(startDate, endDate, user.UserName, searchQuery, sort, descending, lat, lng, pageIndex, pageSize);
         }
-
 
         [HttpGet("popular")]
         [AllowAnonymous]
@@ -74,11 +77,18 @@ namespace NerdDinner.Web.Controllers
             return await _repository.GetPopularDinnersAsync();
         }
 
+        [HttpGet("count")]
+        [AllowAnonymous]
+        public int GetDinnersCount()
+        {
+            return _repository.GetDinnersCount();
+        }
+
         [HttpGet("isUserHost")]
         [AllowAnonymous]
         public async Task<IActionResult> IsUserHost(int id)
         {
-            if (Context.User.GetUserId() != null)
+            if (Context.User.GetUserId() == null)
             {
                 return new ObjectResult(false);
             }
@@ -92,7 +102,7 @@ namespace NerdDinner.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> IsUserRegistered(int id)
         {
-            if (Context.User.GetUserId() != null)
+            if (Context.User.GetUserId() == null)
             {
                 return new ObjectResult(false);
             }

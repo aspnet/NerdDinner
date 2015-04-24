@@ -1,0 +1,34 @@
+﻿<div class="container main-view">
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+            <div id='dinnerMap' ng-init="loadMap()" class="nerd-map"></div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                <h4>Edit Dinner</h4>
+                <form novalidate ng-submit="edit()">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="title" ng-model="dinner.title" placeholder="Dinner Title" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="datetime-local" class="form-control" id="eventDate" ng-model="eventDate" placeholder="Event Date" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="description" ng-model="dinner.description" placeholder="Description" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="address" ng-model="dinner.address" ng-model-options="{ updateOn: 'blur' }" ng-change="changeAddress(dinner.address)" placeholder="Address" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="tel" class="form-control" id="contact" ng-model="dinner.contactPhone" placeholder="Contact Phone" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">save</button>
+                    <button type="button" class="btn btn-secondary" ng-click="cancel()">cancel</button>
+                </form>
+        </div>
+    </div>
+</div>

@@ -14,7 +14,7 @@ namespace NerdDinner.Web.Persistence
 
         Task<Dinner> GetDinnerAsync(int dinnerId);
         
-        Task<List<Dinner>> GetDinnersAsync(DateTime? startDate, DateTime? endDate, string userName, string searchQuery, string sort, bool descending, double? lat, double? lng);
+        Task<List<Dinner>> GetDinnersAsync(DateTime? startDate, DateTime? endDate, string userName, string searchQuery, string sort, bool descending, double? lat, double? lng, int? pageIndex, int? pageSize);
 
         Task<List<Dinner>> GetPopularDinnersAsync();
 
@@ -23,6 +23,8 @@ namespace NerdDinner.Web.Persistence
         Task<Dinner> UpdateDinnerAsync(Dinner dinner);
 
         Task DeleteDinnerAsync(int dinnerId);
+
+        int GetDinnersCount();
 
         Task<Rsvp> CreateRsvpAsync(Dinner dinner, string userName);
 

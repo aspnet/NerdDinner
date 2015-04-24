@@ -2,17 +2,17 @@
     ViewBag.Title = "Nerd Dinner - Home";
 }
 
-    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
-    <link rel="stylesheet" href="~/lib/bootstrap-touch-carousel/css/bootstrap-touch-carousel.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+<link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
+<link rel="stylesheet" href="~/lib/bootstrap-touch-carousel/css/bootstrap-touch-carousel.css" />
+<link rel="stylesheet" href="~/css/site.css" />
 
 <header>
     <div class="container">
         <div class="row parent">
-            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                <img src="~/images/logo.png" />
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 ">
+                <img class="logo" src="~/images/logo.png" />
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-right child">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-right child">
                 @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
@@ -20,17 +20,21 @@
     <div class="container">
         <ul class="nav nav-tabs navbar-right">
             <li role="presentation"><a href="/">Find Dinner</a></li>
-            <li role="presentation"><a href="#">Host Dinner</a></li>
             @if (User.Identity.IsAuthenticated)
             {
-                <li role="presentation"><a href="#">My Dinners</a></li>
+                <li role="presentation"><a href="/dinners/add">Host Dinner</a></li>
+                    <li role="presentation"><a href="/dinners/my">My Dinners</a></li>
             }
-
+            else
+            {
+                <li role="presentation"><a href="/account/login">Host Dinner</a></li>
+            }
             <li role="presentation"><a href="/about">About</a></li>
         </ul>
     </div>
 </header>
-<div class="container">
+
+<div class="container main-body">
     <ng-view></ng-view>
 </div>
 
