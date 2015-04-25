@@ -68,7 +68,7 @@ namespace NerdDinner.Web.Persistence
 
             query = ApplyDinnerSort(query, sort, descending);
 
-            if (pageIndex.HasValue && pageSize.HasValue)
+            if(pageIndex.HasValue && pageSize.HasValue)
             {
                 query = query.Skip((pageIndex.Value - 1) * pageSize.Value).Take(pageSize.Value);
             }

@@ -32,7 +32,7 @@
             <ul class="dinner-list" ng-repeat="dinner in dinners">
                 <li>
                     <div>
-                        <a href="" class="link" ng-click="selectDinner(dinner.dinnerId)" ng-mouseover="showLocationPin(dinner)">{{dinner.title}}</a>
+                        <a href="" class="link" ng-click="selectDinner(dinner.dinnerId)" ng-mouseover="showLocationPin(dinner)" ng-mouseleave="hideInfoBoxPin()">{{dinner.title}}</a>
                     </div>
                     <div>
                         <span><b>{{dinner.eventDate | date:'MMM dd'}}</b></span>

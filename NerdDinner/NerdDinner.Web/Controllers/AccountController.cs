@@ -20,6 +20,13 @@ namespace NerdDinner.Web.Controllers
 
         public SignInManager<ApplicationUser> SignInManager { get; private set; }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public string IsUserAuthenticated()
+        {
+            return User.Identity.IsAuthenticated.ToString();
+        }
+
         //
         // GET: /Account/Login
         [HttpGet]

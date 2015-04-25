@@ -41,15 +41,9 @@
                 </form>
             </section>
         </div>
-    </div>
-</div>
-    
-    @*<div class="row">
-        
-        <div class="col-md-4">
+        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 bordered">
             <section id="socialLoginForm">
-                <h4>Use another service to log in.</h4>
-                <hr />
+                <h4>Use another service to log in</h4>
                 @{
                     var LoginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
                     if (LoginProviders.Count == 0)
@@ -78,8 +72,11 @@
                 }
             </section>
         </div>
-    </div>*@
 
-    @section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-    }
+
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

@@ -27,6 +27,25 @@
                 return dinnerHelper($http, $q, '/api/dinners/isUserRegistered?id=' + dinnerId)
             },
 
+            addDinner: function (dinner) {
+                var deferredObject = $q.defer();
+                $http.post(
+                    '/api/dinners', dinner
+                ).
+                success(function (data) {
+                    if (data) {
+                        deferredObject.resolve({ success: true, data: data });
+                    } else {
+                        deferredObject.resolve({ success: false });
+                    }
+                }).
+                error(function (err) {
+                    deferredObject.resolve({ error: err });
+                });
+
+                return deferredObject.promise;
+            },
+
             editDinner: function (dinnerId, dinner) {
                 var deferredObject = $q.defer();
                 $http.put(
@@ -39,8 +58,8 @@
                         deferredObject.resolve({ success: false });
                     }
                 }).
-                error(function () {
-                    deferredObject.resolve({ success: false });
+                error(function (err) {
+                    deferredObject.resolve({ error: err });
                 });
 
                 return deferredObject.promise;
@@ -72,8 +91,6 @@
         $http.get(url).
         success(function (data) {
             if (data) {
-                deferredObject.resolve({ success: data });
-            } else {
                 deferredObject.resolve({ success: data });
             }
         }).

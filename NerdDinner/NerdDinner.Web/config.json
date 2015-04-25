@@ -3,5 +3,23 @@
         "DefaultConnection": {
             "ConnectionString": "Server=tcp:zm4o6p4e1l.database.windows.net;Database=NDinner;User ID=writer-sql;Password=Schakra01*;Trusted_Connection=False;Encrypt=True;MultipleActiveResultSets=true;"
         }
+    },
+    "Authentication": {
+        "Facebook": {
+            "AppId": "1628974507321076",
+            "AppSecret": "7c8680db91b175bbe97f77a051380546"
+        },
+        "Google": {
+            "AppId": "135363840336-ervf2q3393fae41b023f8vmvnilthkd3.apps.googleusercontent.com",
+            "AppSecret": "yJYn7pDolux-4ObEqkMkXbdb"
+        },
+        "Microsoft": {
+            "AppId": "",
+            "AppSecret": ""
+        },
+        "Twitter": {
+            "AppId": "9J3j3pSwgbWkgPFH7nAf0Spam",
+            "AppSecret": "jUBYkQuBFyqp7G3CUB9SW3AfflFr9z3oQBiNvumYy87Al0W4h8"
+        }
     }
 }

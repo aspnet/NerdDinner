@@ -7,6 +7,7 @@
         .controller('listController', listController)
         .controller('myController', myController)
         .controller('detailController', detailController)
+        .controller('addController', addController)
         .controller('editController', editController)
         .controller('deleteController', deleteController);
 
@@ -26,6 +27,10 @@
 
         $scope.showLocationPin = function (dinner) {
             mapService.showInfoBoxPin(dinner);
+        };
+
+        $scope.hideInfoBoxPin = function (dinner) {
+            mapService.hideInfoBoxPin();
         };
 
         $scope.showLocation = function (searchText) {
@@ -57,28 +62,33 @@
     }
 
     /* Dinners My Controller  */
-    myController.$inject = ['$scope', '$location', 'dinner'];
+    myController.$inject = ['$scope', '$location', 'dinner', 'isUserAuthenticated'];
 
-    function myController($scope, $location, dinner) {
-        $scope.dinners = dinner.my.query();
+    function myController($scope, $location, dinner, isUserAuthenticated) {
+        if (isUserAuthenticated.success == 'False') {
+            $location.path('/account/login');
+        }
+
         $scope.selectDinner = function (dinnerId) {
             $location.path('/dinners/detail/' + dinnerId);
         };
     }
 
     /* Dinners Detail Controller  */
-    detailController.$inject = ['$scope', '$routeParams', '$location', 'dinner', 'mapService'];
+    detailController.$inject = ['$scope', '$routeParams', '$location', 'dinner', 'mapService', 'isUserAuthenticated'];
 
-    function detailController($scope, $routeParams, $location, dinner, mapService) {
+    function detailController($scope, $routeParams, $location, dinner, mapService, isUserAuthenticated) {
         $scope.dinner = dinner.all.get({ id: $routeParams.id });
 
-        var hostResult = dinner.isUserHost($routeParams.id);
-        hostResult.then(function (result) {
+        if (isUserAuthenticated.success == 'False') {
+            $scope.isUserAuthenticated = isUserAuthenticated.success;
+        }
+
+        dinner.isUserHost($routeParams.id).then(function (result) {
             $scope.isUserHost = result.success;
         });
 
-        var registeredResult = dinner.isUserRegistered($routeParams.id);
-        registeredResult.then(function (result) {
+        dinner.isUserRegistered($routeParams.id).then(function (result) {
             $scope.isUserRegistered = result.success;
         });
 
@@ -95,10 +105,58 @@
         }
     }
 
-    /* Dinners Edit Controller  */
-    editController.$inject = ['$scope', '$routeParams', '$location', 'dinner', 'mapService'];
+    /* Dinners Create Controller */
+    addController.$inject = ['$http', '$scope', '$location', 'dinner', 'mapService', 'isUserAuthenticated'];
 
-    function editController($scope, $routeParams, $location, dinner, mapService) {
+    function addController($http, $scope, $location, dinner, mapService, isUserAuthenticated) {
+        $scope.dinner = {
+            title: '',
+            description: '',
+            eventDate: '',
+            address: '',
+            contactPhone: ''
+        };
+
+        if (isUserAuthenticated.success == 'False') {
+            $location.path('/account/login');
+        }
+
+        $scope.loadDefaultMap = function () {
+            mapService.loadDefaultMap();
+        }
+
+        $scope.changeAddress = function (address) {
+            mapService.findAddress(address, true);
+        }
+
+        $scope.add = function () {
+            var result = dinner.addDinner($scope.dinner);
+            result.then(function (result) {
+                if (result.success) {
+                    if (result.data.dinnerId) {
+                        $location.path('/dinners/detail/' + result.data.dinnerId);
+                        $scope.error = false;
+                    } else {
+                        $scope.error = true;
+                    }
+                } else {
+                    $scope.error = true;
+                    $scope.errorMessage = result.error;
+                }
+            });
+        };
+
+        $scope.cancel = function () {
+            $location.path('/');
+        }
+    }
+    /* Dinners Edit Controller  */
+    editController.$inject = ['$scope', '$routeParams', '$location', 'dinner', 'mapService', 'isUserAuthenticated'];
+
+    function editController($scope, $routeParams, $location, dinner, mapService, isUserAuthenticated) {
+        if (isUserAuthenticated.success == 'False') {
+            $location.path('/account/login');
+        }
 
         $scope.dinner = dinner.all.get({ id: $routeParams.id });
 
@@ -123,6 +181,9 @@
             result.then(function (result) {
                 if (result.success) {
                     $location.path('/dinners/detail/' + $routeParams.id);
+                } else {
+                    $scope.error = true;
+                    $scope.errorMessage = result.error;
                 }
             });
         }
@@ -133,9 +194,13 @@
     }
 
     /* Dinners Delete Controller */
-    deleteController.$inject = ['$scope', '$routeParams', '$location', 'dinner'];
+    deleteController.$inject = ['$scope', '$routeParams', '$location', 'dinner', 'isUserAuthenticated'];
 
-    function deleteController($scope, $routeParams, $location, dinner) {
+    function deleteController($scope, $routeParams, $location, dinner, isUserAuthenticated) {
+        if (isUserAuthenticated.success == 'False') {
+            $location.path('/account/login');
+        }
+
         $scope.dinner = dinner.all.get({ id: $routeParams.id });
 
         $scope.delete = function () {

@@ -42,7 +42,7 @@
                             map.entities.clear();
                             map.entities.push(pin);
                             var bestview = Microsoft.Maps.LocationRect.fromLocations(location);
-                            map.getRootElement().style.cursor = "move";
+                            //map.getRootElement().style.cursor = "move";
                             map.setView({ bounds: bestview });
                             map.setView({ zoom: 10 });
                         }
@@ -50,8 +50,6 @@
                             var bbox = result.resourceSets[0].resources[0].bbox;
                             zoomMapToLocation(bbox[0], bbox[1]);
                         }
-                    } else {
-                        alert("Please specify a valid address");
                     }
                 })
                 .error(function (data, status, error, thing) {
@@ -60,6 +58,11 @@
         };
 
         this.loadMap = function (dinners, zoomlevel) {
+            if (map != null && map.entities) {
+                // map.entities.clear();
+                infobox = null;
+                infoboxLayer = new Microsoft.Maps.EntityCollection();
+            }
             map = new Microsoft.Maps.Map(document.getElementById('dinnerMap'), {
                 credentials: bingMapsKey,
                 mapTypeId: Microsoft.Maps.MapTypeId.road,
@@ -85,19 +88,27 @@
             pin.Id = dinner.dinnerId;
             pin.Title = dinner.title;
             pin.Date = dinner.eventDate;
+            pin.Description = dinner.description;
             pin.Address = dinner.address;
-            pinLayer.push(pin);
+            pin.rsvps = dinner.rsvps.length;
             var e = new Object();
             e.target = pin;
             displayInfobox(e);
-            return false;
         };
+
+        this.hideInfoBoxPin = function () {
+            startInfoboxTimer();
+        }
 
         function zoomMapToLocation(latitude, longitude) {
             map.setView({ center: new Microsoft.Maps.Location(latitude, longitude), zoom: 10 });
         };
 
         function loadDetailsMap(dinner) {
+            map.entities.clear();
+            map = null;
+            infobox = null;
+            infoboxLayer = new Microsoft.Maps.EntityCollection();
             map = new Microsoft.Maps.Map(document.getElementById('dinnerMap'), {
                 credentials: bingMapsKey,
                 mapTypeId: Microsoft.Maps.MapTypeId.road
@@ -107,7 +118,7 @@
             var location = new Microsoft.Maps.Location(dinner.latitude, dinner.longitude);
             locs.push(location);
 
-            var pin = new Microsoft.Maps.Pushpin(location);
+            var pin = new Microsoft.Maps.Pushpin(location, { icon: '../../images/poi_usergenerated.gif', width: 50, height: 50 });
             //pin details
             pin.Id = dinner.dinnerId;
             pin.Title = dinner.title;
@@ -122,7 +133,6 @@
             map.entities.push(infoboxLayer);
 
             var bestview = Microsoft.Maps.LocationRect.fromLocations(locs);
-            map.getRootElement().style.cursor = "move";
             map.setView({ bounds: bestview });
             map.setView({ zoom: 10 });
         };
@@ -131,17 +141,17 @@
             infobox.setOptions({ visible: true });
         };
 
-        function hideInfobox(e) {
+        function hideInfobox() {
             if (infobox != null) {
                 infobox.setOptions({ visible: false });
             }
         };
 
         function pinInfoboxMouseLeave(e) {
-            hideInfobox(e);
+            hideInfobox();
         };
 
-        function startInfoboxTimer(e) {
+        function startInfoboxTimer() {
             if (infobox != null && infobox.pinTimer != null) {
                 clearTimeout(infobox.pinTimer);
             }
@@ -150,43 +160,31 @@
             }
         };
 
-        function stopInfoboxTimer(e) {
+        function stopInfoboxTimer() {
             if (infobox != null && infobox.pinTimer != null) {
                 clearTimeout(infobox.pinTimer);
             }
         };
 
         function pinInfoboxMouseEnter(e) {
-            stopInfoboxTimer(e);
+            stopInfoboxTimer();
         };
 
         function pinMouseOver(e) {
-            if (e.targetType === "pushpin") {
-                map.getRootElement().style.cursor = "pointer";
-            };
             displayInfobox(e);
         };
 
-        function pinMouseOut(e) {
-            map.getRootElement().style.cursor = "move";
-            startInfoboxTimer(e);
+        function pinMouseOut() {
+            startInfoboxTimer();
         };
 
-        function mapViewChange(e) {
-            stopInfoboxTimer(e);
-            hideInfobox(e);
-        };
-
-        function timerTriggered(e) {
-            hideInfobox(e);
-        };
-
-        function selectDinner(dinnerId) {
-            //this.selectDinner($scope.dinner.dinnerId);            
+        function timerTriggered() {
+            hideInfobox();
         };
 
         function displayInfobox(e) {
-            stopInfoboxTimer(e);
+            hideInfobox();
+            stopInfoboxTimer();
             var pin = e.target;
             if (pin != null) {
                 var currentDinnerId = pin.Id;
@@ -195,10 +193,11 @@
                 var dateString = date.toDateString();
                 var location = pin.getLocation();
                 var options = {
-                    id: pin.Id, height: 100, width: 150, zIndex: 999, visible: true, showPointer: true, showCloseButton: true, title: currentDinnerTitle, description: pin.Description, titleClickHandler: showDetail, offset: new Microsoft.Maps.Point(0, 30)
+                    id: pin.Id, zIndex: 999, visible: true, showPointer: true, showCloseButton: true, title: currentDinnerTitle, description: popupDescription(pin.Description, dateString, pin.rsvps), titleClickHandler: showDetail, offset: new Microsoft.Maps.Point(-12, 40)
                 };
                 if (infobox != null) {
-                    infoboxLayer.clear();
+                    map.entities.remove(infobox);
+                    map.entities.remove(infoboxLayer);
                     if (Microsoft.Maps.Events.hasHandler(infobox, 'mouseleave')) {
                         Microsoft.Maps.Events.removeHandler(infobox.mouseLeaveHandler);
                     }
@@ -207,7 +206,6 @@
                     }
                     infobox = null;
                 }
-
                 infobox = new Microsoft.Maps.Infobox(location, options);
                 infobox.mouseLeaveHandler = Microsoft.Maps.Events.addHandler(infobox, 'mouseleave', pinInfoboxMouseLeave);
                 infobox.mouseEnterHandler = Microsoft.Maps.Events.addHandler(infobox, 'mouseenter', pinInfoboxMouseEnter);
@@ -216,9 +214,17 @@
             }
         };
 
+        function popupDescription(description, dateString, rsvps) {
+            var mapDescription = '<strong>' + dateString + '</strong><p>' + description + '</p>';
+            if (rsvps) {
+                mapDescription += '<p>' + rsvps + ' RSVPs</p>';
+            }
+
+            return mapDescription;
+        }
+
         function showDetail() {
-            //window.location = '/dinners/detail/8';
-            // $rootScope.$apply();
+            window.location('/#dinners/detail/8');
         }
 
         function loadDinnersOnMap(dinners, zoomlevel) {
@@ -227,13 +233,14 @@
                 var location = new Microsoft.Maps.Location(dinners[i].latitude, dinners[i].longitude);
                 locs.push(location);
 
-                var pin = new Microsoft.Maps.Pushpin(location);
+                var pin = new Microsoft.Maps.Pushpin(location, { icon: 'images/poi_usergenerated.gif', width: 50, height: 50 });
                 //pin details
                 pin.Id = dinners[i].dinnerId;
                 pin.Title = dinners[i].title;
                 pin.Date = dinners[i].eventDate;
                 pin.Address = dinners[i].address;
                 pin.Description = dinners[i].description;
+                pin.rsvps = dinners[i].rsvps.length;
                 pinLayer.push(pin);
                 Microsoft.Maps.Events.addHandler(pin, 'mouseover', pinMouseOver);
                 Microsoft.Maps.Events.addHandler(pin, 'mouseout', pinMouseOut);
@@ -242,7 +249,7 @@
             map.entities.push(infoboxLayer);
 
             var bestview = Microsoft.Maps.LocationRect.fromLocations(locs);
-            map.getRootElement().style.cursor = "move";
+            //map.getRootElement().style.cursor = "move";
             map.setView({ bounds: bestview });
         };
     }

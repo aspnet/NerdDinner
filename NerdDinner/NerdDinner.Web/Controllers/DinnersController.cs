@@ -55,6 +55,7 @@ namespace NerdDinner.Web.Controllers
         }
 
         [HttpGet("my")]
+        [AllowAnonymous]
         public async Task<IEnumerable<Dinner>> GetMyDinnersAsync(
             DateTime? startDate,
             DateTime? endDate,

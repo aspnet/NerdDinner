@@ -53,17 +53,30 @@ namespace NerdDinner.Web
                 .AddEntityFrameworkStores<NerdDinnerDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.Configure<FacebookAuthenticationOptions>(options =>
+            services.ConfigureFacebookAuthentication(options =>
             {
-                options.AppId = Configuration["Authentication:Facebook:AppId"];
-                options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                options.ClientId = Configuration["Authentication:Facebook:AppId"];
+                options.ClientSecret = Configuration["Authentication:Facebook:AppSecret"];
             });
 
-            services.Configure<MicrosoftAccountAuthenticationOptions>(options =>
+            services.ConfigureGoogleAuthentication(options =>
             {
-                options.ClientId = Configuration["Authentication:MicrosoftAccount:ClientId"];
-                options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
+                options.ClientId = Configuration["Authentication:Google:AppId"];
+                options.ClientSecret = Configuration["Authentication:Google:AppSecret"];
             });
+
+            services.ConfigureTwitterAuthentication(options =>
+            {
+                options.ConsumerKey = Configuration["Authentication:Twitter:AppId"];
+                options.ConsumerSecret = Configuration["Authentication:Twitter:AppSecret"];
+            });
+
+            //services.ConfigureMicrosoftAccountAuthentication(options =>
+            //{
+            //    options.Caption = "MicrosoftAccount - Requires project changes";
+            //    options.ClientId = Configuration["Authentication:Microsoft:AppId"];
+            //    options.ClientSecret = Configuration["Authentication:Microsoft:AppSecret"];
+            //});
 
             // Add MVC services to the services container.
             services.AddMvc().Configure<MvcOptions>(options =>
@@ -105,10 +118,10 @@ namespace NerdDinner.Web
             app.UseStaticFiles();
             app.UseIdentity();
 
-            // app.UseFacebookAuthentication();
-            // app.UseGoogleAuthentication();
-            // app.UseMicrosoftAccountAuthentication();
-            // app.UseTwitterAuthentication();
+            app.UseFacebookAuthentication();
+            app.UseGoogleAuthentication();
+            //app.UseMicrosoftAccountAuthentication();
+            app.UseTwitterAuthentication();
 
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>

@@ -22,27 +22,37 @@
             .when('/dinners/my', {
                 title: 'Nerd Dinner - My Dinners',
                 templateUrl: '/views/my.html',
-                controller: 'myController'
+                controller: 'myController',
+                resolve: { isUserAuthenticated: 'authService' }
+            })
+            .when('/dinners/add', {
+                title: 'Nerd Dinner - Host Dinner',
+                templateUrl: '/views/add.html',
+                controller: 'addController',
+                resolve: { isUserAuthenticated: 'authService' }
             })
             .when('/dinners/detail/:id', {
                 title: 'Nerd Dinner - Details',
                 templateUrl: '/views/detail.html',
-                controller: 'detailController'
+                controller: 'detailController',
+                resolve: { isUserAuthenticated: 'authService' }
             })
             .when('/dinners/edit/:id', {
                 title: 'Nerd Dinner - Edit Dinner',
                 templateUrl: '/views/edit.html',
-                controller: 'editController'
+                controller: 'editController',
+                resolve: { isUserAuthenticated: 'authService' }
             })
             .when('/dinners/delete/:id', {
                 title: 'Nerd Dinner - Delete Dinner',
                 templateUrl: '/views/delete.html',
-                controller: 'deleteController'
+                controller: 'deleteController',
+                resolve: { isUserAuthenticated: 'authService' }
             })
             .when('/account/login', {
                 title: 'Nerd Dinner - Log In',
                 templateUrl: '/account/login',
-                controller: 'loginController'
+                controller: 'loginController',
             })
             .when('/account/register', {
                 title: 'Nerd Dinner - Register',
