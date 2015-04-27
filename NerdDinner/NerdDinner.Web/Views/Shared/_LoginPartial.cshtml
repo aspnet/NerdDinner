@@ -1,0 +1,17 @@
+﻿@using System.Security.Claims
+
+@if (User.Identity.IsAuthenticated)
+{
+    <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
+        <div class="login-display">
+            <span>Hello </span><span><b>@User.GetUserName()!</b></span>
+            <span> [ </span><a href="javascript:document.getElementById('logoutForm').submit()" class="link">Log off</a><span> ] </span>
+        </div>
+    </form>
+}
+else
+{
+    <div class="login-display">
+        <span> [ </span><a id="loginLink" class="link" asp-controller="account" asp-action="login">Log On</a><span> ] </span>
+    </div>
+}

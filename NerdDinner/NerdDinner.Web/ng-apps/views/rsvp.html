@@ -1,0 +1,13 @@
+﻿<div>
+    <div ng-show="isUserHost">You are the host for this event!</div>
+    <div ng-show="!isUserHost">
+        <div ng-show="isUserRegistered">
+            <div ng-show="!showMessage">You are registered for this event!</div>
+            <div><a class="link" href="#" ng-click="cancelRsvp(dinner.dinnerId)">Cancel your RSVP</a></div>
+        </div>
+        <div ng-show="!isUserRegistered">
+            <a class="link" href="#" ng-click="addRsvp(dinner.dinnerId)">RSVP for this event</a>
+        </div>
+    </div>
+    <div ng-show="showMessage">{{message}}</div>
+</div>
