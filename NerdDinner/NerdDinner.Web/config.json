@@ -1,0 +1,25 @@
+{
+    "Data": {
+        "DefaultConnection": {
+            "ConnectionString": "YOUR_CONNECTION_STRING"
+        }
+    },
+    "Authentication": {
+        "Facebook": {
+            "AppId": "FACEBOOK_APP_ID",
+            "AppSecret": "FACEBOOK_APP_SECRET"
+        },
+        "Google": {
+            "AppId": "GOOGLE_APP_ID",
+            "AppSecret": "GOOGLE_APP_SECRET"
+        },
+        "Microsoft": {
+            "AppId": "MICROSOFT_APP_ID",
+            "AppSecret": "MICROSOFT_APP_SECRET"
+        },
+        "Twitter": {
+            "AppId": "TWITTER_APP_ID",
+            "AppSecret": "TWITTER_SECRET"
+        }
+    }
+}
