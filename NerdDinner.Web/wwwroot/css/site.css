@@ -1,0 +1,122 @@
+body {
+  background: #f7f4e6 url('/images/bkg.jpg') repeat-x top left !important;
+  font-family: arial, helvetica, clean, sans-serif;
+  font-size: 13px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+}
+header {
+  background: transparent url('/images/header-bkg.jpg') no-repeat bottom left;
+  padding: 25px 10px 0 0;
+}
+.logo {
+  cursor: pointer;
+}
+.parent {
+  position: relative;
+}
+.child {
+  position: absolute;
+  bottom: 20px;
+  right: 5px;
+}
+.login-display {
+  color: #660000;
+  font-size: 1.1em;
+}
+.link {
+  color: #660000;
+  text-decoration: underline;
+  font-weight: bold;
+}
+.container {
+  max-width: 1024px !important;
+}
+.container > .nav-tabs > li > a,
+.container > .nav-tabs > li.active > a,
+.container > .nav-tabs > li > a:hover,
+.container > .nav-tabs > li.active > a:hover,
+.container > .nav-tabs > li > a:focus,
+.container > .nav-tabs > li.active > a:focus {
+  color: #fff;
+  background-color: #337ab7;
+}
+h4 {
+  margin-top: 0 !important;
+}
+.main-body {
+  margin-bottom: 20px;
+}
+.bordered {
+  border: dotted 1px #CCCCCC;
+  margin: 10px;
+  padding: 20px;
+}
+.main-head {
+  margin-top: 20px;
+  padding: 0 !important;
+}
+.search-box {
+  width: 373px;
+  height: 130px;
+  padding: 10px 10px 25px 10px;
+  background: transparent url('/images/search-bubble.png') no-repeat;
+}
+.search-box > div {
+  margin: 10px;
+}
+.search-text {
+  width: 250px !important;
+}
+.main-view {
+  background: #fff;
+  padding: 30px;
+  padding-top: 20px;
+  border-radius: 0px 0px 10px 10px;
+  box-shadow: 2px 2px 2px #888888;
+  min-height: 492px;
+}
+.nerd-map {
+  position: relative;
+  height: 405px;
+  border: solid 1px #bbd1ec;
+  z-index: 5;
+}
+.dinner-list {
+  list-style: none;
+  padding-left: 0px;
+  margin-bottom: 5px !important;
+}
+.dinner-list > li {
+  padding: 3px 0px 3px 0px;
+  border-top: dotted 1px #CCCCCC;
+}
+.detail {
+  list-style: none;
+  padding-left: 0px;
+}
+.detail > li {
+  padding: 7px 0px 7px 0px;
+}
+.guests,
+.errors {
+  list-style: none;
+  padding-left: 10px;
+}
+.guests > li,
+.errors > li {
+  padding: 2px 0px 2px 0px;
+}
+.nerd {
+  width: 155px;
+  height: 200px;
+}
+@media screen and (max-width: 880px) {
+  .nerd-text {
+    display: none;
+  }
+  .nerd-search {
+    float: right;
+  }
+}
