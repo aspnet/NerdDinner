@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="NerdDinners.DinnerAddEdit">
+	<ContentPage.Content>
+		<ScrollView>
+			<StackLayout Spacing="10" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
+				<!---<maps:Map HeightRequest="250" x:Name="dinnerMap" IsShowingUser="true" MapType="Street" IsVisible="false"/> -->
+        <StackLayout>
+					<Label Text="Title" FontAttributes="Bold" FontSize="Medium">
+					</Label>
+					<Entry x:Name="txtTitle">
+					</Entry>
+				</StackLayout>
+				<Label Text="Event Date" FontAttributes="Bold" FontSize="Medium">
+					</Label>
+				<StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+					<DatePicker x:Name="datePicker"></DatePicker>
+					<TimePicker x:Name="timePicker"></TimePicker>
+				</StackLayout>
+        <StackLayout>
+					<Label Text="Description" FontAttributes="Bold" FontSize="Medium">
+					</Label>
+					<Entry x:Name="txtDescription">
+					</Entry>
+				</StackLayout>
+        <StackLayout>
+					<Label Text="Host's Name" FontAttributes="Bold" FontSize="Medium">
+					</Label>
+					<Entry x:Name="txtOrganizer">
+					</Entry>
+				</StackLayout>
+				<StackLayout>
+					<Label Text="Contact Info" FontAttributes="Bold" FontSize="Medium">
+					</Label>
+					<Entry x:Name="txtContactPhone">
+					</Entry>
+				</StackLayout>
+				<StackLayout>
+					<Label Text="Address, City, State, Zip" FontAttributes="Bold" FontSize="Medium">
+					</Label>
+					<Entry x:Name="txtAddress">
+					</Entry>
+				</StackLayout>
+        <StackLayout>
+					<Label Text="Country" FontAttributes="Bold" FontSize="Medium">
+					</Label>
+					<Entry x:Name="txtCountry">
+					</Entry>
+				</StackLayout>
+				
+				<StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="EndAndExpand">
+					<Button x:Name="btnSave" Text="SAVE">
+					</Button>
+					<!--<Button x:Name="btnCancel" Text="CANCEL">
+					</Button>-->
+				</StackLayout>
+			</StackLayout>
+		</ScrollView>
+	</ContentPage.Content>
+</ContentPage>

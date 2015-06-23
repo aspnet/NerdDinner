@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="NerdDinners.DinnerDetails" xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps" Padding="0,20,0,0">
+	<ContentPage.Content>
+		<ScrollView>
+			<StackLayout Spacing="10" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
+				
+				<maps:Map HeightRequest="250" x:Name="dinnerMap" IsShowingUser="true" MapType="Street" IsVisible="True"/>
+				
+				<StackLayout>
+					<Label Text="When" FontAttributes="Bold" FontSize="Medium">
+					</Label>
+					<Label x:Name="lblWhen">
+					</Label>
+				</StackLayout>
+				<StackLayout>
+					<Label Text="Where" FontAttributes="Bold" FontSize="Medium">
+					</Label>
+					<Label x:Name="lblWhere">
+					</Label>
+				</StackLayout>
+				<StackLayout>
+					<Label Text="Description" FontAttributes="Bold" FontSize="Medium">
+					</Label>
+					<Label x:Name="lblDescription">
+					</Label>
+				</StackLayout>
+				<StackLayout>
+					<Label Text="Organizer" FontAttributes="Bold" FontSize="Medium">
+					</Label>
+					<Label x:Name="lblOrganizer">
+					</Label>
+				</StackLayout>
+
+				<StackLayout>
+					<Label Text="Who's Coming" FontAttributes="Bold" FontSize="Medium">
+					</Label>
+					<ListView x:Name="lvRSVP">
+            <ListView.ItemTemplate>
+              <DataTemplate>
+                <TextCell Text="{Binding UserName}"></TextCell>
+              </DataTemplate>
+            </ListView.ItemTemplate>
+					</ListView>
+				</StackLayout>
+				<StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="EndAndExpand">
+					<Button x:Name="btnEdit" Text="EDIT">
+					</Button>
+					<Button x:Name="btnDelete" Text="DELETE">
+					</Button>
+					<Button x:Name="btnRSVP" Text="RSVP">
+					</Button>
+				</StackLayout>
+			</StackLayout>
+		</ScrollView>
+	</ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps" x:Class="NerdDinners.DinnerList">
+  <ContentPage.Content>
+    <!--<ScrollView>-->
+      <StackLayout Padding="2" Spacing="5" VerticalOptions="Start">
+        <ActivityIndicator x:Name="activityIndicator" Color="Red" VerticalOptions="Center" HorizontalOptions="Center">
+        </ActivityIndicator>
+        <Button x:Name="btnAddDinner" Text="Add Dinner">
+        </Button>
+        <maps:Map HeightRequest="250" x:Name="mapDinners" HasZoomEnabled="true" IsShowingUser="false" MapType="Hybrid" />
+        <SearchBar x:Name="txtSearch" Placeholder="Search for Dinners" HorizontalOptions="FillAndExpand">
+        </SearchBar>
+        <ListView x:Name="lvDinners" VerticalOptions="FillAndExpand">
+        </ListView>
+      </StackLayout>
+    <!--</ScrollView>-->
+  </ContentPage.Content>
+</ContentPage>

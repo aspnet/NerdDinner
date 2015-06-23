@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
+x:Class="XFApp.MyPage"
+Padding="0,20,0,0"
+Title="Nerd Dinner">
+	<ContentPage.Content>
+	<StackLayout Padding="20" Spacing="10">
+
+	<maps:Map HeightRequest="250"
+            x:Name="myMap"
+            IsShowingUser="true"
+            MapType="Hybrid"
+        />
+	<SearchBar x:Name="txtSearch" Placeholder="Search for Dinners" HorizontalOptions="FillAndExpand"></SearchBar>
+	<ListView x:Name="lvPersons" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+	</ListView>
+
+	</StackLayout>
+
+	</ContentPage.Content>
+</ContentPage>
