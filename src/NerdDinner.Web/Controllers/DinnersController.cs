@@ -68,7 +68,7 @@ namespace NerdDinner.Web.Controllers
             string sort = null,
             bool descending = false)
         {
-            var user = await _userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await _userManager.FindByIdAsync(User.GetUserId());
             return await _repository.GetDinnersAsync(startDate, endDate, user.UserName, searchQuery, sort, descending, lat, lng, pageIndex, pageSize);
         }
 
@@ -90,13 +90,13 @@ namespace NerdDinner.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> IsUserHost(int id)
         {
-            if (Context.User.GetUserId() == null)
+            if (User.GetUserId() == null)
             {
                 return new ObjectResult(false);
             }
 
             var dinner = await _repository.GetDinnerAsync(id);
-            var user = await _userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await _userManager.FindByIdAsync(User.GetUserId());
             return new ObjectResult(dinner.IsUserHost(user.UserName));
         }
 
@@ -104,28 +104,28 @@ namespace NerdDinner.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> IsUserRegistered(int id)
         {
-            if (Context.User.GetUserId() == null)
+            if (User.GetUserId() == null)
             {
                 return new ObjectResult(false);
             }
 
             var dinner = await _repository.GetDinnerAsync(id);
-            var user = await _userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await _userManager.FindByIdAsync(User.GetUserId());
             return new ObjectResult(dinner.IsUserRegistered(user.UserName));
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateDinnerAsync([FromBody] Dinner dinner)
         {
-            var user = await _userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await _userManager.FindByIdAsync(User.GetUserId());
             dinner.UserName = user.UserName;
 
             GeoLocation.SearchByPlaceNameOrZip(dinner);
             dinner = await _repository.CreateDinnerAsync(dinner);
             var url = Url.RouteUrl("GetDinnerById", new { id = dinner.DinnerId }, Request.Scheme, Request.Host.ToUriComponent());
 
-            Context.Response.StatusCode = (int)HttpStatusCode.Created;
-            Context.Response.Headers["Location"] = url;
+            Response.StatusCode = (int)HttpStatusCode.Created;
+            Response.Headers["Location"] = url;
             return new ObjectResult(dinner);
         }
 
@@ -137,7 +137,7 @@ namespace NerdDinner.Web.Controllers
                 return new HttpStatusCodeResult((int)HttpStatusCode.BadRequest);
             }
 
-            var user = await _userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await _userManager.FindByIdAsync(User.GetUserId());
             if (!dinner.IsUserHost(user.UserName))
             {
                 return HttpNotFound();
@@ -152,7 +152,7 @@ namespace NerdDinner.Web.Controllers
         public async Task<IActionResult> DeleteDinnerAsync(int id)
         {
             var dinner = await _repository.GetDinnerAsync(id);
-            var user = await _userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await _userManager.FindByIdAsync(User.GetUserId());
 
             if (!dinner.IsUserHost(user.UserName))
             {

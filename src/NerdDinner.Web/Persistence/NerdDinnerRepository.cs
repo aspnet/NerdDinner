@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.Entity;
 using NerdDinner.Web.Models;
 
 namespace NerdDinner.Web.Persistence
@@ -22,9 +23,9 @@ namespace NerdDinner.Web.Persistence
         public virtual async Task<Dinner> GetDinnerAsync(int dinnerId)
         {
             return await _database.Dinners
-                .Include(d => d.Rsvps)
-                .SingleOrDefaultAsync(d => d.DinnerId == dinnerId);
-        }        
+                                  .Include(d => d.Rsvps)
+                                  .SingleOrDefaultAsync(d => d.DinnerId == dinnerId);
+        }
 
         public virtual async Task<List<Dinner>> GetDinnersAsync(DateTime? startDate, DateTime? endDate, string userName, string searchQuery, string sort, bool descending, double? lat, double? lng, int? pageIndex, int? pageSize)
         {
@@ -53,7 +54,7 @@ namespace NerdDinner.Web.Persistence
             {
                 query = query.Where(
                     d => d.Title.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) != -1 ||
-                    d.Description.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) != -1);
+                         d.Description.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) != -1);
             }
 
             if (lat.HasValue)
@@ -68,7 +69,7 @@ namespace NerdDinner.Web.Persistence
 
             query = ApplyDinnerSort(query, sort, descending);
 
-            if(pageIndex.HasValue && pageSize.HasValue)
+            if (pageIndex.HasValue && pageSize.HasValue)
             {
                 query = query.Skip((pageIndex.Value - 1) * pageSize.Value).Take(pageSize.Value);
             }
@@ -79,18 +80,18 @@ namespace NerdDinner.Web.Persistence
         public virtual async Task<List<Dinner>> GetPopularDinnersAsync()
         {
             return await _database.Dinners
-                .Include(d => d.Rsvps)
-                .OrderByDescending(d => d.Rsvps.Count)
-                .Take(8)
-                .ToListAsync();
+                                  .Include(d => d.Rsvps)
+                                  .OrderByDescending(d => d.Rsvps.Count)
+                                  .Take(8)
+                                  .ToListAsync();
         }
 
         public virtual async Task<Dinner> CreateDinnerAsync(Dinner dinner)
         {
             var rsvp = new Rsvp
-            {
-                UserName = dinner.UserName
-            };
+                           {
+                               UserName = dinner.UserName
+                           };
 
             dinner.Rsvps = new List<Rsvp> { rsvp };
 
@@ -143,9 +144,9 @@ namespace NerdDinner.Web.Persistence
                 else
                 {
                     rsvp = new Rsvp
-                    {
-                        UserName = userName
-                    };
+                               {
+                                   UserName = userName
+                               };
 
                     dinner.Rsvps.Add(rsvp);
                     _database.Add(rsvp);
@@ -163,7 +164,8 @@ namespace NerdDinner.Web.Persistence
             {
                 _database.Rsvp.Remove(rsvp);
                 await _database.SaveChangesAsync();
-            };
+            }
+            ;
 
             // Else no errors - this operation is idempotent
         }

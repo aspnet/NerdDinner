@@ -32,7 +32,7 @@ namespace NerdDinner.Web.Controllers
                 return HttpNotFound();
             }
 
-            var user = await _userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await _userManager.FindByIdAsync(User.GetUserId());
             var rsvp = await _repository.CreateRsvpAsync(dinner, user.UserName);
             return new JsonResult(rsvp);
         }
@@ -46,7 +46,7 @@ namespace NerdDinner.Web.Controllers
                 return HttpNotFound();
             }
 
-            var user = await _userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await _userManager.FindByIdAsync(User.GetUserId());
 
             await _repository.DeleteRsvpAsync(dinner, user.UserName);
             return new HttpStatusCodeResult((int)HttpStatusCode.NoContent);

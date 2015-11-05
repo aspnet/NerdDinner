@@ -4,10 +4,8 @@
   "userSecretsId": "aspnet5-NerdDinner.Web-1962bbc5-c504-462c-8a1d-0ff97373c4ab",
 
   "dependencies": {
-    "EntityFramework.SqlServer": "7.0.0-beta8",
     "EntityFramework.Commands": "7.0.0-beta8",
-    "Microsoft.AspNet.Mvc": "6.0.0-beta8",
-    "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-beta8",
+    "EntityFramework.SqlServer": "7.0.0-beta8",
     "Microsoft.AspNet.Authentication.Cookies": "1.0.0-beta8",
     "Microsoft.AspNet.Authentication.Facebook": "1.0.0-beta8",
     "Microsoft.AspNet.Authentication.Google": "1.0.0-beta8",
@@ -16,6 +14,9 @@
     "Microsoft.AspNet.Diagnostics": "1.0.0-beta8",
     "Microsoft.AspNet.Diagnostics.Entity": "7.0.0-beta8",
     "Microsoft.AspNet.Identity.EntityFramework": "3.0.0-beta8",
+    "Microsoft.AspNet.IISPlatformHandler": "1.0.0-beta8",
+    "Microsoft.AspNet.Mvc": "6.0.0-beta8",
+    "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-beta8",
     "Microsoft.AspNet.Server.Kestrel": "1.0.0-beta8",
     "Microsoft.AspNet.StaticFiles": "1.0.0-beta8",
     "Microsoft.AspNet.Tooling.Razor": "1.0.0-beta8",
