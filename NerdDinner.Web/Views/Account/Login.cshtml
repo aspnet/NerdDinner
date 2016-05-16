@@ -1,8 +1,8 @@
-﻿@model LoginViewModel
-@using System.Collections.Generic
-@using Microsoft.AspNet.Http
-@using Microsoft.AspNet.Http.Authentication
-@inject SignInManager<ApplicationUser> SignInManager
+﻿@using System.Collections.Generic
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Authentication
+@model NerdDinner.Web.Models.LoginViewModel
+@inject Microsoft.AspNetCore.Identity.SignInManager<NerdDinner.Web.Models.ApplicationUser> SignInManager
 
 @{
     ViewBag.Title = "Log On";
@@ -34,8 +34,8 @@
                     </div>
                     <div class="form-group">
                         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <input type="submit" value="Log On" class="btn btn-default" />
-                            <span class="login-display">or <a class="link" asp-action="register">Register</a></span>
+                            <button type="submit" class="btn btn-default">Log On</button>
+                            <span class="login-display">or <a class="link" asp-action="Register">Register</a></span>
                         </div>
                     </div>
                 </form>
@@ -45,8 +45,8 @@
             <section id="socialLoginForm">
                 <h4>Use another service to log in</h4>
                 @{
-                    var LoginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
-                    if (LoginProviders.Count == 0)
+                    var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
+                    if (loginProviders.Count == 0)
                     {
                         <div>
                             <p>
@@ -61,9 +61,9 @@
 
                             <div id="socialLoginList">
                                 <p>
-                                    @foreach (AuthenticationDescription p in LoginProviders)
+                                    @foreach (var provider in loginProviders)
                                     {
-                                        <button type="submit" class="btn btn-default" id="@p.AuthenticationScheme" name="provider" value="@p.AuthenticationScheme" title="Log in using your @p.Caption account">@p.AuthenticationScheme</button>
+                                        <button type="submit" class="btn btn-default" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">@provider.AuthenticationScheme</button>
                                     }
                                 </p>
                             </div>

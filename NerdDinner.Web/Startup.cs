@@ -1,15 +1,11 @@
-﻿using Microsoft.AspNet.Authentication.Facebook;
-using Microsoft.AspNet.Authentication.MicrosoftAccount;
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Diagnostics;
-using Microsoft.AspNet.Diagnostics.Entity;
-using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Mvc;
-using Microsoft.Data.Entity;
-using Microsoft.Framework.ConfigurationModel;
-using Microsoft.Framework.DependencyInjection;
-using Microsoft.Framework.Logging;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NerdDinner.Web.Common;
 using NerdDinner.Web.Models;
 using NerdDinner.Web.Persistence;
@@ -23,16 +19,19 @@ namespace NerdDinner.Web
         public Startup(IHostingEnvironment env)
         {
             // Setup configuration sources.
-            var configuration = new Configuration()
-                .AddJsonFile("config.json")
-                .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true);
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
-            if (env.IsEnvironment("Development"))
+            if (env.IsDevelopment())
             {
-                configuration.AddUserSecrets();
+                // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
+                builder.AddUserSecrets();
             }
-            configuration.AddEnvironmentVariables();
-            Configuration = configuration;
+
+            builder.AddEnvironmentVariables();
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; set; }
@@ -41,10 +40,9 @@ namespace NerdDinner.Web
         public void ConfigureServices(IServiceCollection services)
         {
             // Add EF services to the services container.
-            services.AddEntityFramework()
-                .AddSqlServer()
-                .AddDbContext<NerdDinnerDbContext>(options =>
-                    options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+            services.AddEntityFrameworkSqlServer()
+                    .AddDbContext<NerdDinnerDbContext>(options =>
+                            options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
 
             services.AddScoped<INerdDinnerRepository, NerdDinnerRepository>();
 
@@ -53,23 +51,23 @@ namespace NerdDinner.Web
                 .AddEntityFrameworkStores<NerdDinnerDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.ConfigureFacebookAuthentication(options =>
-            {
-                options.ClientId = Configuration["Authentication:Facebook:AppId"];
-                options.ClientSecret = Configuration["Authentication:Facebook:AppSecret"];
-            });
+            //services.ConfigureFacebookAuthentication(options =>
+            //{
+            //    options.ClientId = Configuration["Authentication:Facebook:AppId"];
+            //    options.ClientSecret = Configuration["Authentication:Facebook:AppSecret"];
+            //});
 
-            services.ConfigureGoogleAuthentication(options =>
-            {
-                options.ClientId = Configuration["Authentication:Google:AppId"];
-                options.ClientSecret = Configuration["Authentication:Google:AppSecret"];
-            });
+            //services.ConfigureGoogleAuthentication(options =>
+            //{
+            //    options.ClientId = Configuration["Authentication:Google:AppId"];
+            //    options.ClientSecret = Configuration["Authentication:Google:AppSecret"];
+            //});
 
-            services.ConfigureTwitterAuthentication(options =>
-            {
-                options.ConsumerKey = Configuration["Authentication:Twitter:AppId"];
-                options.ConsumerSecret = Configuration["Authentication:Twitter:AppSecret"];
-            });
+            //services.ConfigureTwitterAuthentication(options =>
+            //{
+            //    options.ConsumerKey = Configuration["Authentication:Twitter:AppId"];
+            //    options.ConsumerSecret = Configuration["Authentication:Twitter:AppSecret"];
+            //});
 
             //services.ConfigureMicrosoftAccountAuthentication(options =>
             //{
@@ -79,7 +77,7 @@ namespace NerdDinner.Web
             //});
 
             // Add MVC services to the services container.
-            services.AddMvc().Configure<MvcOptions>(options =>
+            services.AddMvc().AddMvcOptions(options =>
             {
                 var settings = new JsonSerializerSettings()
                 {
@@ -89,7 +87,7 @@ namespace NerdDinner.Web
 
                 var formatter = new JsonOutputFormatter { SerializerSettings = settings };
 
-               options.OutputFormatters.Insert(0, formatter);
+                options.OutputFormatters.Insert(0, formatter);
 
                 // Add validation filters
                 options.Filters.Add(new ValidateModelFilterAttribute());
@@ -97,31 +95,28 @@ namespace NerdDinner.Web
         }
 
         // Configure is called after ConfigureServices is called.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            // Configure the HTTP request pipeline.
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
 
-            // Add the console logger.
-            loggerfactory.AddConsole(minLevel: LogLevel.Warning);
-
-            // Add the following to the request pipeline only in development environment.
-            if (env.IsEnvironment("Development"))
+            if (env.IsDevelopment())
             {
-                app.UseErrorPage(ErrorPageOptions.ShowAll);
-                app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
+                app.UseDeveloperExceptionPage();
+                app.UseBrowserLink();
             }
             else
             {
-                app.UseErrorHandler("/Home/Error");
+                app.UseExceptionHandler("/Home/Error");
             }
 
             app.UseStaticFiles();
             app.UseIdentity();
 
-            app.UseFacebookAuthentication();
-            app.UseGoogleAuthentication();
+            //app.UseFacebookAuthentication();
+            //app.UseGoogleAuthentication();
             //app.UseMicrosoftAccountAuthentication();
-            app.UseTwitterAuthentication();
+            //app.UseTwitterAuthentication();
 
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>
@@ -132,7 +127,13 @@ namespace NerdDinner.Web
                     defaults: new { controller = "Home", action = "Index" });
             });
 
-            //SampleData.InitializeNerdDinner(app.ApplicationServices).Wait();
+            // Call EnsureCreated to get schema created. 
+            var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            using (var serviceScope = serviceScopeFactory.CreateScope())
+            {
+                var dbContext = serviceScope.ServiceProvider.GetService<NerdDinnerDbContext>();
+                dbContext.Database.EnsureCreated();
+            }
         }
     }
 }

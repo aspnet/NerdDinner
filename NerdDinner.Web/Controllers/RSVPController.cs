@@ -1,9 +1,9 @@
 ﻿using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using NerdDinner.Web.Models;
 using NerdDinner.Web.Persistence;
 
@@ -29,10 +29,10 @@ namespace NerdDinner.Web.Controllers
             var dinner = await _repository.GetDinnerAsync(dinnerId);
             if (dinner == null)
             {
-                return HttpNotFound();
+                return new NotFoundResult();
             }
 
-            var user = await _userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await GetCurrentUserAsync();
             var rsvp = await _repository.CreateRsvpAsync(dinner, user.UserName);
             return new JsonResult(rsvp);
         }
@@ -43,13 +43,21 @@ namespace NerdDinner.Web.Controllers
             var dinner = await _repository.GetDinnerAsync(dinnerId);
             if (dinner == null)
             {
-                return HttpNotFound();
+                return new NotFoundResult();
             }
 
-            var user = await _userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await GetCurrentUserAsync();
 
             await _repository.DeleteRsvpAsync(dinner, user.UserName);
-            return new HttpStatusCodeResult((int)HttpStatusCode.NoContent);
+            return new NoContentResult();
         }
+
+        #region Helpers
+        private Task<ApplicationUser> GetCurrentUserAsync()
+        {
+            return _userManager.GetUserAsync(HttpContext.User);
+        }
+
+        #endregion
     }
 }
