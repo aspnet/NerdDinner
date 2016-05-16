@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.Framework.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using NerdDinner.Web.Persistence;
 
 namespace NerdDinner.Web.Models

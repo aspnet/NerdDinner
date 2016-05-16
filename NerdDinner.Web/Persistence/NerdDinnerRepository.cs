@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NerdDinner.Web.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace NerdDinner.Web.Persistence
 {
