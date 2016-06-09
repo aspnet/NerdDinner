@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22821.0
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NerdDinner.Web", "NerdDinner.Web\NerdDinner.Web.xproj", "{DDEA20D3-4AA0-4BEF-B685-E60DC642F544}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NerdDinner.Web", "src\NerdDinner.Web\NerdDinner.Web.xproj", "{DDEA20D3-4AA0-4BEF-B685-E60DC642F544}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D65F2CF9-DB01-4F12-AB55-EC805830DC46}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+		NuGet.config = NuGet.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
